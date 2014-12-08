@@ -28,9 +28,11 @@ from PyQt4 import QtGui, uic
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'eq_distant_dialog_base.ui'))
 
+HELP_CLASS, _ = uic.loadUiType(os.path.join(                                # <---- load ui files for help dialog class
+    os.path.dirname(__file__), 'eq_distant_dialog_help.ui'))
 
 class EqDistantDialog(QtGui.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, iface, parent=None):            # <---- pass iface
         """Constructor."""
         super(EqDistantDialog, self).__init__(parent)
         # Set up the user interface from Designer.
@@ -39,3 +41,22 @@ class EqDistantDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.iface = iface                      # <---- pass iface
+
+    def accept(self):                           # <---- create accept method
+        self.iface.messageBar().clearWidgets()
+        self.close()
+
+    def on_btnHelp_pressed(self):
+        self.hdlg = EqDistantDialogHelp()
+        self.hdlg.show()
+
+
+class EqDistantDialogHelp(QtGui.QDialog, HELP_CLASS):                   # <---- add Help dialog class
+    def __init__(self, parent=None):
+        super(EqDistantDialogHelp, self).__init__(parent)
+        self.setupUi(self)
+
+    def on_btnClose_pressed(self):
+        self.hdlg = EqDistantDialogHelp()
+        self.hdlg.hide()

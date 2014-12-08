@@ -22,12 +22,16 @@
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon
+from qgis.core import *
+from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
-from eq_distant_dialog import EqDistantDialog
+from eq_distant_dialog import EqDistantDialog, EqDistantDialogHelp
+from libs.adj_lib import AdjacentLibrary
+#from opp_lib import *
+#from lay_lib import LayerOperation
 import os.path
-
 
 class EqDistant:
     """QGIS Plugin Implementation."""
@@ -59,8 +63,10 @@ class EqDistant:
                 QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        self.dlg = EqDistantDialog()
-
+        self.dlg = EqDistantDialog(self.iface)              #<----- pass iface
+        #self.adjLib = AdjacentLibrary()
+        #self.oppLib = OppositeLibrary()
+        #self.layOpt = LayerOperation()
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&EqDistant Plugin')
@@ -176,15 +182,28 @@ class EqDistant:
                 action)
             self.iface.removeToolBarIcon(action)
 
-
     def run(self):
         """Run method that performs all the real work"""
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+        # layer checking from map canvas
+        layers_ = QgsMapLayerRegistry.instance().mapLayers().values()
+        line_layers = []
+        for i in layers_:
+            if i.geometryType() == 1:
+                line_layers.append(i)
+        if len(line_layers)<2:
+            self.iface.messageBar().pushMessage('Tips','Tambahkan minimal dua layer bertipe polyline ke Map Canvas',level=QgsMessageBar.INFO,duration=3)
+            self.iface.messageBar().pushMessage('Ups!!','Anda belum menambahkan cukup layer ke Map Canvas',level=QgsMessageBar.CRITICAL,duration=3)
+        else:
+            # show the dialog
+            self.dlg.show()
+            # Run the dialog event loop
+            result = self.dlg.exec_()
+            # See if OK was pressed
+            if result:
+                # Do something useful here - delete the line containing pass and
+                # substitute with your code.
+                pass
+
+    def showHelp(self):
+        self.hdlg = EqDistantDialogHelp()
+        self.hdlg.show()
