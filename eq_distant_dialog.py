@@ -24,6 +24,8 @@
 import os
 
 from PyQt4 import QtGui, uic
+from qgis.gui import QgsMapToolEmitPoint, QgsMessageBar
+from qgis.core import *
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'eq_distant_dialog_base.ui'))
@@ -43,14 +45,17 @@ class EqDistantDialog(QtGui.QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface                      # <---- pass iface
 
-    def accept(self):                           # <---- create accept method
+    '''
+    def accept(self):
         self.iface.messageBar().clearWidgets()
         self.close()
-
+    '''
     def on_btnHelp_pressed(self):
         self.hdlg = EqDistantDialogHelp()
         self.hdlg.show()
 
+    def on_btnCancel_pressed(self):
+        self.reject()
 
 class EqDistantDialogHelp(QtGui.QDialog, HELP_CLASS):                   # <---- add Help dialog class
     def __init__(self, parent=None):
@@ -60,3 +65,5 @@ class EqDistantDialogHelp(QtGui.QDialog, HELP_CLASS):                   # <---- 
     def on_btnClose_pressed(self):
         self.hdlg = EqDistantDialogHelp()
         self.hdlg.hide()
+
+

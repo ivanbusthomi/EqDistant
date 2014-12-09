@@ -21,16 +21,16 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QMessageBox
 from qgis.core import *
-from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint
+from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint, QgsMapToolPan
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
 from eq_distant_dialog import EqDistantDialog, EqDistantDialogHelp
 from libs.adj_lib import AdjacentLibrary
-#from opp_lib import *
-#from lay_lib import LayerOperation
+from libs.lay_lib import LayerOperation
+from libs.opp_lib import OppositeLibrary
 import os.path
 
 class EqDistant:
@@ -64,9 +64,7 @@ class EqDistant:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = EqDistantDialog(self.iface)              #<----- pass iface
-        #self.adjLib = AdjacentLibrary()
-        #self.oppLib = OppositeLibrary()
-        #self.layOpt = LayerOperation()
+        self.layOpt = LayerOperation()                      # <---- call LayerOperation from libs.lay_lib
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&EqDistant Plugin')
@@ -182,13 +180,159 @@ class EqDistant:
                 action)
             self.iface.removeToolBarIcon(action)
 
+    #---------------- Opposite State Tools  #
+    def pressedStartA(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik awal untuk layer A',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.clickedStartA)
+        self.dlg.hide()
+    def clickedStartA(self, point, button):
+        self.start_a = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.lineEdit_sa.setText("%s,%s"%(str(round(self.start_a.x(),3)),str(round(self.start_a.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def pressedStartB(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik awal untuk layer B',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.clickedStartB)
+        self.dlg.hide()
+    def clickedStartB(self, point, button):
+        self.start_b = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.lineEdit_sb.setText("%s,%s"%(str(round(self.start_b.x(),3)),str(round(self.start_b.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def pressedEndA(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik akhir untuk layer A',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.clickedEndA)
+        self.dlg.hide()
+    def clickedEndA(self, point, button):
+        self.end_a = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.lineEdit_ea.setText("%s,%s"%(str(round(self.end_a.x(),3)),str(round(self.end_a.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def pressedEndB(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik akhir untuk layer B',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.clickedEndB)
+        self.dlg.hide()
+    def clickedEndB(self, point, button):
+        self.end_b = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.lineEdit_eb.setText("%s,%s"%(str(round(self.end_b.x(),3)),str(round(self.end_b.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def opp_deploy(self):
+        # define layer from comboBox item #
+        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+        intv = self.dlg.opp_intv.value()
+        # convert line layer to point layer
+        point_layer_a = self.layOpt.lineToPoint(layer_a, "A")
+        point_layer_b = self.layOpt.lineToPoint(layer_b, "B")
+        # create list of features from point layer
+        feat_list_a = []
+        feat_list_b = []
+        for feat in point_layer_a.getFeatures():feat_list_a.append(feat)
+        for feat in point_layer_b.getFeatures():feat_list_b.append(feat)
+        lib = OppositeLibrary(point_layer_a,point_layer_b,intv)
+        #define start and end point in point_layer_a and point_layer_b
+        start_point_a = lib.nearestFeat(self.start_a,feat_list_a).geometry().asPoint()
+        start_point_b = lib.nearestFeat(self.start_b,feat_list_b).geometry().asPoint()
+        end_point_a = lib.nearestFeat(self.end_a,feat_list_a).geometry().asPoint()
+        end_point_b = lib.nearestFeat(self.end_b,feat_list_b).geometry().asPoint()
+        #mid_start = lib.findMid(start_point_a,start_point_b)
+        #mid_end = lib.findMid(end_point_a,end_point_b)
+        final_result, construction_line = lib.deploy(feat_list_a,feat_list_b,start_point_a,start_point_b,end_point_a,end_point_b)
+        #self.layOpt.addPointF(final_result)
+        if self.dlg.checkBox_eLine.isChecked():
+            self.layOpt.pointlayerToLine(final_result)
+        if self.dlg.checkBox_eLine.isChecked():
+            self.layOpt.addLine_FList(construction_line)
+        self.dlg.close()
+    #---------------- Opposite State Tools  #
+    def adj_pressedStartA(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik awal untuk layer A',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.adj_clickedStartA)
+        self.dlg.hide()
+    def adj_clickedStartA(self, point, button):
+        self.adj_start_a = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.adj_lineEditA.setText("%s,%s"%(str(round(self.adj_start_a.x(),3)),str(round(self.adj_start_a.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def adj_pressedStartB(self):
+        self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.iface.messageBar().pushMessage('Info','Input titik awal untuk layer B',level=QgsMessageBar.INFO,duration=1)
+        self.iface.mapCanvas().setMapTool(self.clickTool)
+        self.clickTool.canvasClicked.connect(self.adj_clickedStartB)
+        self.dlg.hide()
+    def adj_clickedStartB(self, point, button):
+        self.adj_start_b = self.clickTool.toMapCoordinates(self.clickTool.toCanvasCoordinates(point))
+        self.dlg.adj_lineEditB.setText("%s,%s"%(str(round(self.adj_start_b.x(),3)),str(round(self.adj_start_b.y(),3))))
+        self.clickTool.deactivate()
+        self.dlg.show()
+
+    def adj_deploy(self):
+        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+        intv = self.dlg.adj_intv.value()
+        claim_dist = self.dlg.adj_claim_dist.value()
+        lib = AdjacentLibrary(layer_a,layer_b,claim_dist,intv)
+        list_feat_a = []
+        list_feat_b = []
+        for a in layer_a.getFeatures():list_feat_a.append(a)
+        for b in layer_b.getFeatures():list_feat_b.append(b)
+        list_geom_a=[]
+        list_geom_b=[]
+        for a in list_feat_a:list_geom_a.append(a.geometry())
+        for b in list_feat_b:list_geom_b.append(b.geometry())
+        start_point_a = self.layOpt.pointinline(self.adj_start_a,list_geom_a)
+        start_point_b = self.layOpt.pointinline(self.adj_start_b,list_geom_b)
+        ends = []
+        for geom_a in list_geom_a:
+            for geom_b in list_geom_b:
+                if geom_a.intersects(geom_b):
+                    e = geom_a.intersection(geom_b)
+                    ends.append(e)
+        if len(ends)>1:
+            raise ValueError("more than 1 intersection between layer a and layer b")
+        p_end = ends[0].asPoint()
+        list_eq_geom = lib.deploy(start_point_a,start_point_b,p_end)
+
+
+
     def run(self):
         """Run method that performs all the real work"""
-        # layer checking from map canvas
+        # clear everytime the dialog loaded #
+        self.dlg.inputLayerA.clear()
+        self.dlg.inputLayerB.clear()
+        # connect opposite state map tools
+        self.dlg.opp_btnStartA.pressed.connect(self.pressedStartA)
+        self.dlg.opp_btnStartB.pressed.connect(self.pressedStartB)
+        self.dlg.opp_btnEndA.pressed.connect(self.pressedEndA)
+        self.dlg.opp_btnEndB.pressed.connect(self.pressedEndB)
+        #self.dlg.btnBrowse_eLine.pressed.connect(self.opp_deploy)
+        #self.dlg.btnCancel.pressed.connect(self.dlg.reject)
+        if self.dlg.tabWidget.currentIndex()==0:
+            self.dlg.btnOk.pressed.connect(self.opp_deploy)
+        elif self.dlg.tabWidget.currentIndex()==1:
+            self.dlg.btnOk.pressed.connect(self.adj_deploy)
+
+        # layer checking from map canvas    #
         layers_ = QgsMapLayerRegistry.instance().mapLayers().values()
         line_layers = []
         for i in layers_:
-            if i.geometryType() == 1:
+            if i.type() == QgsMapLayer.VectorLayer and i.geometryType() == 1:
                 line_layers.append(i)
         if len(line_layers)<2:
             self.iface.messageBar().pushMessage('Tips','Tambahkan minimal dua layer bertipe polyline ke Map Canvas',level=QgsMessageBar.INFO,duration=3)
@@ -196,6 +340,11 @@ class EqDistant:
         else:
             # show the dialog
             self.dlg.show()
+
+            # read line layers from mapCanvas, and add it to comboBox #
+            for layer in line_layers:
+                self.dlg.inputLayerA.addItem(layer.name(),layer)
+                self.dlg.inputLayerB.addItem(layer.name(),layer)
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
@@ -203,6 +352,7 @@ class EqDistant:
                 # Do something useful here - delete the line containing pass and
                 # substitute with your code.
                 pass
+                #--------------------------------------------------
 
     def showHelp(self):
         self.hdlg = EqDistantDialogHelp()

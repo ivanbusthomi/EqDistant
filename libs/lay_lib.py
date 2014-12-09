@@ -1,5 +1,6 @@
 from qgis.core import *
 from PyQt4.QtCore import QVariant
+import math
 
 class LayerOperation(object):
     def __init__(self):
@@ -7,6 +8,14 @@ class LayerOperation(object):
         #self.point_layer = point_layer
         #self.attr = attr
         pass
+
+    def pointinline(self, point, list_line_geom):
+        result = {}
+        for line_geom in list_line_geom:
+            dist,p,int = line_geom.closestSegmentWithContext(point)
+            result[p]=dist
+        nearest = min(result, key=result.get)
+        return nearest
 
     def lineToPoint(self, line_layer, attr):
         point_layer=QgsVectorLayer("Point", "Point Result", "memory")
