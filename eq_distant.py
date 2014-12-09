@@ -306,9 +306,9 @@ class EqDistant:
                     ends.append(e)
         if len(ends)>1:
             raise ValueError("more than 1 intersection between layer a and layer b")
-        p_end = ends[0].asPoint()
+        else:
+            p_end = ends[0].asPoint()
         list_eq_geom = lib.deploy(start_point_a,start_point_b,p_end)
-
 
 
     def run(self):
@@ -323,6 +323,10 @@ class EqDistant:
         self.dlg.opp_btnEndB.pressed.connect(self.pressedEndB)
         #self.dlg.btnBrowse_eLine.pressed.connect(self.opp_deploy)
         #self.dlg.btnCancel.pressed.connect(self.dlg.reject)
+
+        # connect adjacent state map tools
+        self.dlg.adj_btnStartA.pressed.connect(self.adj_pressedStartA)
+        self.dlg.adj_btnStartB.pressed.connect(self.adj_pressedStartB)
         if self.dlg.tabWidget.currentIndex()==0:
             self.dlg.btnOk.pressed.connect(self.opp_deploy)
         elif self.dlg.tabWidget.currentIndex()==1:
