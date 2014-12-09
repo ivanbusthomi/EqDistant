@@ -286,7 +286,7 @@ class EqDistant:
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
         layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
         intv = self.dlg.adj_intv.value()
-        claim_dist = self.dlg.adj_claim_dist.value()
+        claim_dist = int(self.dlg.adj_claim_dist.text())
         lib = AdjacentLibrary(layer_a,layer_b,claim_dist,intv)
         list_feat_a = []
         list_feat_b = []
@@ -309,7 +309,7 @@ class EqDistant:
         else:
             p_end = ends[0].asPoint()
         list_eq_geom = lib.deploy(start_point_a,start_point_b,p_end)
-
+        self.layOpt.addPointL(list_eq_geom)
 
     def run(self):
         """Run method that performs all the real work"""
@@ -321,17 +321,12 @@ class EqDistant:
         self.dlg.opp_btnStartB.pressed.connect(self.pressedStartB)
         self.dlg.opp_btnEndA.pressed.connect(self.pressedEndA)
         self.dlg.opp_btnEndB.pressed.connect(self.pressedEndB)
-        #self.dlg.btnBrowse_eLine.pressed.connect(self.opp_deploy)
         #self.dlg.btnCancel.pressed.connect(self.dlg.reject)
-
         # connect adjacent state map tools
         self.dlg.adj_btnStartA.pressed.connect(self.adj_pressedStartA)
         self.dlg.adj_btnStartB.pressed.connect(self.adj_pressedStartB)
-        if self.dlg.tabWidget.currentIndex()==0:
-            self.dlg.btnOk.pressed.connect(self.opp_deploy)
-        elif self.dlg.tabWidget.currentIndex()==1:
-            self.dlg.btnOk.pressed.connect(self.adj_deploy)
-
+        self.dlg.opp_btnRun.pressed.connect(self.opp_deploy)
+        self.dlg.adj_btnRun.pressed.connect(self.adj_deploy)
         # layer checking from map canvas    #
         layers_ = QgsMapLayerRegistry.instance().mapLayers().values()
         line_layers = []

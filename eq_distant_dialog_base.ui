@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>452</height>
+    <height>468</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,8 +38,8 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0" colspan="6">
-    <widget class="QTabWidget" name="tabWidget">
+   <item row="6" column="0" colspan="6">
+    <widget class="QTabWidget" name="tabMenu">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -47,7 +47,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="opposite">
       <attribute name="title">
@@ -277,6 +277,13 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="4">
+           <widget class="QPushButton" name="opp_btnRun">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -456,6 +463,13 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="4">
+           <widget class="QPushButton" name="adj_btnRun">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -463,28 +477,14 @@
      </widget>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Output</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" colspan="6">
-    <widget class="Line" name="line_4">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
+   <item row="14" column="0">
     <widget class="QLabel" name="labStatus">
      <property name="text">
       <string>Status</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1" colspan="5">
+   <item row="14" column="1" colspan="5">
     <widget class="QTextBrowser" name="textBrowser">
      <property name="maximumSize">
       <size>
@@ -494,14 +494,14 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0" colspan="6">
+   <item row="15" column="0" colspan="6">
     <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="14" column="5">
+   <item row="17" column="5">
     <widget class="QPushButton" name="btnCancel">
      <property name="maximumSize">
       <size>
@@ -514,7 +514,7 @@
      </property>
     </widget>
    </item>
-   <item row="13" column="0" rowspan="2" colspan="2">
+   <item row="16" column="0" rowspan="2" colspan="2">
     <widget class="QPushButton" name="btnHelp">
      <property name="maximumSize">
       <size>
@@ -527,7 +527,7 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="4">
+   <item row="17" column="4">
     <widget class="QPushButton" name="btnOk">
      <property name="maximumSize">
       <size>
@@ -540,21 +540,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <widget class="QCheckBox" name="checkBox_eLine">
-     <property name="text">
-      <string>Equidistant Line</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QCheckBox" name="checkBox_cLine">
-     <property name="text">
-      <string>Control Line</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="2" rowspan="2" colspan="2">
+   <item row="16" column="2" rowspan="2" colspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -575,24 +561,40 @@
       </font>
      </property>
      <property name="text">
-      <string> </string>
+      <string>status </string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="lab_status_2">
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string> </string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="6">
+   <item row="2" column="0" colspan="6">
     <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Output</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="checkBox_eLine">
+     <property name="text">
+      <string>Equidistant Line</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="checkBox_cLine">
+     <property name="text">
+      <string>Control Line</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="6">
+    <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

@@ -56,7 +56,58 @@ class AdjacentLibrary(object):
         p = QgsPoint(xP,yP)
         return p
 
+    def intersectFunction(self,buff_,eq_geom,list_lineGeom_a,list_lineGeom_b):
+        #buff_line = buff_.convertToType(1)
+        list_intrsFeat=[]
+        flds = QgsFields()
+        ket = QgsField("ket",QVariant.String)
+        flds.append(ket)
+        for lineGeom in list_lineGeom_a:
+            intrs_a = lineGeom.intersection(buff_).asGeometryCollection()
+            for i  in intrs_a:
+                feat = QgsFeature()
+                feat.setFields(flds)
+                n = pointinline(eq_geom.asPoint(),i)
+                feat.setGeometry(QgsGeometry().fromPoint(n))
+                feat.setAttributes(["A"])
+                list_intrsFeat.append(feat)
+        for lineGeom in list_lineGeom_b:
+            intrs_b = lineGeom.intersection(buff_).asGeometryCollection()
+            for i in intrs_b:
+                feat = QgsFeature()
+                feat.setFields(flds)
+                n = pointinline(eq_geom.asPoint(),i)
+                feat.setGeometry(QgsGeometry().fromPoint(n))
+                feat.setAttributes(["B"])
+                list_intrsFeat.append(feat)
+        if len(list_intrsFeat)!=0:
+            f = nearestFeat(eq_geom.asPoint(),list_intrsFeat)
+        else:
+            f=0
+        return f
+
+    def iterPoint(self, p_iter_a,p_iter_b,list_lineGeom_a,list_lineGeom_b, pp_line_geom):
+        current_dist = 0
+        eq_geom = QgsGeometry()
+        feat = QgsFeature()
+        stop_ = False
+        while current_dist<=pp_line_geom.length():
+            eq_geom = pp_line_geom.interpolate(current_dist)
+            dist_a = math.sqrt(eq_geom.asPoint().sqrDist(p_iter_a))
+            buff_ = eq_geom.buffer(dist_a,25)
+            feat = self.intersectFunction(buff_,eq_geom,list_lineGeom_a,list_lineGeom_b)
+            current_dist+=self.intv
+            if feat != 0 and feat.geometry().asPoint()!=p_iter_a and feat.geometry().asPoint()!=p_iter_b:
+                break
+            else:
+                continue
+        else:
+            stop_ = True
+        return eq_geom,feat,stop_
+
     def deploy(self,p_start_a,p_start_b,p_end):
+        p_iter_a = p_start_a
+        p_iter_b = p_start_b
         list_lineGeom_a = []
         list_lineGeom_b = []
         for i in self.line_layer_a.getFeatures():list_lineGeom_a.append(i.geometry())
@@ -86,5 +137,20 @@ class AdjacentLibrary(object):
             g_ppline_base = QgsGeometry().fromPolyline([p_mid,p_base])
             pp = g_ppline_base.intersection(buff_line).asPoint()
             geom_ppline = QgsGeometry().fromPolyline([pp, p_base_rev])
-        print reverse
-        return geom_ppline
+        list_eq_geom = []
+        eq_geom, r_feat, stop_ = self.iterPoint(p_iter_a,p_iter_b,list_lineGeom_a,list_lineGeom_b, geom_ppline)
+        while stop_ == False:
+            if r_feat['ket']=="A":
+                p_iter_a = r_feat.geometry().asPoint()
+            elif r_feat['ket']=="B":
+                p_iter_b = r_feat.geometry().asPoint()
+            else:
+                break
+            list_eq_geom.append(eq_geom)
+            m = self.findMid(p_iter_a,p_iter_b)
+            if reverse == 0:
+                geom_ppline = QgsGeometry().fromPolyline([eq_geom.asPoint(),m])
+            else:
+                geom_ppline = QgsGeometry().fromPolyline([m,eq_geom.asPoint()])
+            eq_geom, r_feat, stop_ = iterPoint(p_iter_a,p_iter_b,list_lineGeom_a,list_lineGeom_b, geom_ppline,intv)
+        return list_eq_geom
