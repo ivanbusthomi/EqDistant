@@ -28,7 +28,7 @@ from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint, QgsMapToolPan
 import resources_rc
 # Import the code for the dialog
 from eq_distant_dialog import EqDistantDialog, EqDistantDialogHelp
-from libs.adj_lib import AdjacentLibrary
+from libs.adj_lib_new import AdjacentLibrary
 from libs.lay_lib import LayerOperation
 from libs.opp_lib import OppositeLibrary
 import os.path
@@ -233,10 +233,11 @@ class EqDistant:
         # define layer from comboBox item #
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
         layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+        crs = layer_a.crs().authid()
         intv = self.dlg.opp_intv.value()
         # convert line layer to point layer
-        point_layer_a = self.layOpt.lineToPoint(layer_a, "A")
-        point_layer_b = self.layOpt.lineToPoint(layer_b, "B")
+        point_layer_a = self.layOpt.lineToPoint(layer_a, "A",crs)
+        point_layer_b = self.layOpt.lineToPoint(layer_b, "B",crs)
         # create list of features from point layer
         feat_list_a = []
         feat_list_b = []
@@ -251,11 +252,11 @@ class EqDistant:
         #mid_start = lib.findMid(start_point_a,start_point_b)
         #mid_end = lib.findMid(end_point_a,end_point_b)
         final_result, construction_line = lib.deploy(feat_list_a,feat_list_b,start_point_a,start_point_b,end_point_a,end_point_b)
-        #self.layOpt.addPointF(final_result)
+        self.layOpt.addPointF(final_result,crs)
         if self.dlg.checkBox_eLine.isChecked():
-            self.layOpt.pointlayerToLine(final_result)
-        if self.dlg.checkBox_eLine.isChecked():
-            self.layOpt.addLine_FList(construction_line)
+            self.layOpt.pointsToLine(final_result,crs)
+        #if self.dlg.checkBox_eLine.isChecked():
+        #    self.layOpt.addLine_FList(construction_line)
         self.dlg.close()
     #---------------- Opposite State Tools  #
     def adj_pressedStartA(self):
@@ -281,6 +282,51 @@ class EqDistant:
         self.dlg.adj_lineEditB.setText("%s,%s"%(str(round(self.adj_start_b.x(),3)),str(round(self.adj_start_b.y(),3))))
         self.clickTool.deactivate()
         self.dlg.show()
+
+    def adj_deploy_new(self):
+        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+        intv = self.dlg.adj_intv.value()
+        claim_dist = int(self.dlg.adj_claim_dist.text())
+        list_feat_a = []
+        list_feat_b = []
+        for feat in layer_a.getFeatures():list_feat_a.append(feat)
+        for feat in layer_b.getFeatures():list_feat_b.append(feat)
+        list_geom_a = []
+        list_geom_b = []
+        for feat in list_feat_a:list_geom_a.append(feat.geometry())
+        for feat in list_feat_b:list_geom_b.append(feat.geometry())
+        lib = AdjacentLibrary(list_geom_a,list_geom_b,claim_dist,intv)
+        p_start_a = self.layOpt.pointinline(self.adj_start_a,list_geom_a)
+        p_start_b = self.layOpt.pointinline(self.adj_start_b,list_geom_b)
+        ends = []
+        for line_a in list_geom_a:
+            for line_b in list_geom_b:
+                if line_a.intersects(line_b):
+                    self.dlg.textBrowser.append("intersect")
+                    e = line_a.intersection(line_b)
+                    ends.append(e)
+                else:
+                    self.dlg.textBrowser.append("no intersection")
+        if len(ends)==0:
+            raise ValueError("Tidak bisa mendefinisikan titik akhir")
+        elif len(ends)>1:
+            raise ValueError("Kandidat titik akhir lebih dari 1")
+        else:
+            g_end = ends[0]
+            p_end = g_end.asPoint()
+        result = lib.something(p_start_a,p_start_b,p_end)
+        result_feat = []
+        for i in result:
+            f = QgsFeature()
+            f.setGeometry(i)
+            result_feat.append(f)
+        crs = layer_a.crs().authid()
+        #self.layOpt.addPointL(result,crs)
+        self.layOpt.pointsToLine(result_feat,crs)
+        #self.dlg.textBrowser.append(str(len(list_geom_a)))
+        #self.dlg.textBrowser.append(str(len(list_geom_b)))
+        #self.dlg.textBrowser.append(str(len(result)))
 
     def adj_deploy(self):
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
@@ -308,14 +354,29 @@ class EqDistant:
             raise ValueError("more than 1 intersection between layer a and layer b")
         else:
             p_end = ends[0].asPoint()
-        list_eq_geom = lib.deploy(start_point_a,start_point_b,p_end)
-        self.layOpt.addPointL(list_eq_geom)
+        #list_eq_geom = lib.something(start_point_a,start_point_b,p_end)
+        self.dlg.textBrowser.append(p_end.toString())
+        #self.layOpt.addPointL(list_eq_geom)
 
+    def checkInputLayer(self):
+        if self.dlg.inputLayerA.currentIndex()==self.dlg.inputLayerB.currentIndex():
+            self.dlg.textBrowser.clear()
+            self.dlg.textBrowser.append('Ups! Layer Input Gak Boleh Sama')
+        else:
+            self.dlg.textBrowser.clear()
+            self.dlg.textBrowser.append('Layer input siap')
+
+    def checkPoint(self):
+        self.dlg.textBrowser.append(str(self.adj_start_a)+' | '+self.adj_start_a.toString())
+        self.dlg.textBrowser.append(str(self.adj_start_b)+' | '+self.adj_start_a.toString())
+        self.dlg.textBrowser.append(str(self.adj_start_a)+' | '+self.adj_start_a.toString())
     def run(self):
         """Run method that performs all the real work"""
         # clear everytime the dialog loaded #
         self.dlg.inputLayerA.clear()
         self.dlg.inputLayerB.clear()
+        self.dlg.inputLayerA.currentIndexChanged.connect(self.checkInputLayer)
+        self.dlg.inputLayerB.currentIndexChanged.connect(self.checkInputLayer)
         # connect opposite state map tools
         self.dlg.opp_btnStartA.pressed.connect(self.pressedStartA)
         self.dlg.opp_btnStartB.pressed.connect(self.pressedStartB)
@@ -326,7 +387,7 @@ class EqDistant:
         self.dlg.adj_btnStartA.pressed.connect(self.adj_pressedStartA)
         self.dlg.adj_btnStartB.pressed.connect(self.adj_pressedStartB)
         self.dlg.opp_btnRun.pressed.connect(self.opp_deploy)
-        self.dlg.adj_btnRun.pressed.connect(self.adj_deploy)
+        self.dlg.adj_btnRun.pressed.connect(self.adj_deploy_new)
         # layer checking from map canvas    #
         layers_ = QgsMapLayerRegistry.instance().mapLayers().values()
         line_layers = []

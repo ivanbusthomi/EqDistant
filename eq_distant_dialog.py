@@ -44,6 +44,9 @@ class EqDistantDialog(QtGui.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.iface = iface                      # <---- pass iface
+        #self.adj_claim_dist.setText('100')
+        #self.opp_claim_dist.setText('100')
+
 
     '''
     def accept(self):

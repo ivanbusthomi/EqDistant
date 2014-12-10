@@ -64,7 +64,7 @@ class AdjacentLibrary(object):
         flds.append(ket)
         for lineGeom in list_lineGeom_a:
             intrs_a = lineGeom.intersection(buff_).asGeometryCollection()
-            for i  in intrs_a:
+            for i in intrs_a:
                 feat = QgsFeature()
                 feat.setFields(flds)
                 n = pointinline(eq_geom.asPoint(),i)
@@ -138,14 +138,14 @@ class AdjacentLibrary(object):
             pp = g_ppline_base.intersection(buff_line).asPoint()
             geom_ppline = QgsGeometry().fromPolyline([pp, p_base_rev])
         list_eq_geom = []
-        eq_geom, r_feat, stop_ = self.iterPoint(p_iter_a,p_iter_b,list_lineGeom_a,list_lineGeom_b, geom_ppline)
+        eq_geom, r_feat, stop_ = self.iterPoint(p_start_a,p_start_b,list_lineGeom_a,list_lineGeom_b, geom_ppline)
         while stop_ == False:
             if r_feat['ket']=="A":
                 p_iter_a = r_feat.geometry().asPoint()
             elif r_feat['ket']=="B":
                 p_iter_b = r_feat.geometry().asPoint()
             else:
-                break
+                raise ValueError('Error di attribut r_feat')
             list_eq_geom.append(eq_geom)
             m = self.findMid(p_iter_a,p_iter_b)
             if reverse == 0:

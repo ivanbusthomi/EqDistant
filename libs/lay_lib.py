@@ -17,8 +17,8 @@ class LayerOperation(object):
         nearest = min(result, key=result.get)
         return nearest
 
-    def lineToPoint(self, line_layer, attr):
-        point_layer=QgsVectorLayer("Point", "Point Result", "memory")
+    def lineToPoint(self, line_layer, attr,crs):
+        point_layer=QgsVectorLayer("Point?crs="+crs, "Point Result", "memory")
         point_layer_prov = point_layer.dataProvider()
         point_layer_prov.addAttributes([QgsField("fid", QVariant.Int),QgsField("ket",QVariant.String)])
         features_list = []
@@ -52,7 +52,7 @@ class LayerOperation(object):
                 currentDistance = distance
                 nearest = p
         return nearest
-    def pointlayerToLine(self,ft_list):
+    def pointsToLine(self,ft_list,crs):
         #ft_list=[]
         #for f in point_layer.getFeatures():
         #    ft_list.append(f)
@@ -69,15 +69,15 @@ class LayerOperation(object):
             s_point = n_point
             #print len(ft_list)
         #convert list of point to line layer
-        line_layer = QgsVectorLayer("LineString", "Line Result", "memory")
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Line Result", "memory")
         line_layer_prov = line_layer.dataProvider()
         feat = QgsFeature()
         line_geom = QgsGeometry.fromPolyline(res_list)
         feat.setGeometry(line_geom)
         line_layer_prov.addFeatures([feat])
         QgsMapLayerRegistry.instance().addMapLayer(line_layer)
-    def addPointL(self,list_point_geom):
-        point_layer = QgsVectorLayer("Point","Point","memory")
+    def addPointL(self,list_point_geom,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
         point_layer_prov = point_layer.dataProvider()
         list_feat = []
         for geom in list_point_geom:
@@ -93,8 +93,8 @@ class LayerOperation(object):
         point_feat.setGeometry(point_geom)
         point_layer_prov.addFeatures([point_feat])
         QgsMapLayerRegistry.instance().addMapLayer(point_layer)
-    def addPointF(self, list_point_feat):
-        point_layer = QgsVectorLayer("Point","Point", "memory")
+    def addPointF(self, list_point_feat,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point", "memory")
         point_layer_prov = point_layer.dataProvider()
         point_layer_prov.addFeatures(list_point_feat)
         QgsMapLayerRegistry.instance().addMapLayer(point_layer)
