@@ -30,8 +30,8 @@ import resources_rc
 from eq_distant_dialog import EqDistantDialog, EqDistantDialogHelp
 from libs.adj_lib_new import AdjacentLibrary
 from libs.lay_lib import LayerOperation
-from libs.opp_lib import OppositeLibrary
-from libs.opp_lib_new import OppositeLibrary as OppositeLibraryNew
+#from libs.opp_lib import OppositeLibrary
+from libs.opp_lib_new import OppositeLibrary
 import os.path
 
 class EqDistant:
@@ -281,16 +281,17 @@ class EqDistant:
         end_point_a = self.layOpt.pointinline(self.end_a,list_geom_a)
         end_point_b = self.layOpt.pointinline(self.end_b,list_geom_b)
         # main function
-        lib = OppositeLibraryNew(list_geom_a,list_geom_b,claim_dist,intv)
-        mid_s = lib.find_mid(start_point_a,start_point_b)
-        mid_e = lib.find_mid(end_point_a,end_point_b)
+        lib = OppositeLibrary(list_geom_a,list_geom_b,claim_dist,intv)
+        #mid_s = lib.find_mid(start_point_a,start_point_b)
+        #mid_e = lib.find_mid(end_point_a,end_point_b)
         result = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
         #self.layOpt.addPointL([start_point_a,mid_s,start_point_b,end_point_a,mid_e,end_point_b],crs)
         #self.layOpt.addPointL(result,crs)
-        self.dlg.textBrowser.append(str(start_point_a))
-        self.dlg.textBrowser.append(str(start_point_b))
-        self.dlg.textBrowser.append(str(end_point_a))
-        self.dlg.textBrowser.append(str(end_point_b))
+        self.dlg.textBrowser.append(str(len(result)))
+        self.layOpt.addPointL(result,crs)
+        #self.dlg.textBrowser.append(start_point_b.toString())
+        #self.dlg.textBrowser.append(end_point_a.toString())
+        #self.dlg.textBrowser.append(end_point_b.toString())
 
     #---------------- Opposite State Tools  #
     def adj_pressedStartA(self):
@@ -330,7 +331,8 @@ class EqDistant:
         list_geom_b = []
         for feat in list_feat_a:list_geom_a.append(feat.geometry())
         for feat in list_feat_b:list_geom_b.append(feat.geometry())
-        lib = AdjacentLibrary(list_geom_a,list_geom_b,claim_dist,intv)
+        crs = layer_a.crs().authid()
+        lib = AdjacentLibrary(list_geom_a,list_geom_b,claim_dist,intv,crs)
         p_start_a = self.layOpt.pointinline(self.adj_start_a,list_geom_a)
         p_start_b = self.layOpt.pointinline(self.adj_start_b,list_geom_b)
         ends = []
@@ -349,18 +351,19 @@ class EqDistant:
         else:
             g_end = ends[0]
             p_end = g_end.asPoint()
-        result = lib.something(p_start_a,p_start_b,p_end)
-        result_feat = []
-        for i in result:
-            f = QgsFeature()
-            f.setGeometry(i)
-            result_feat.append(f)
-        crs = layer_a.crs().authid()
+        list_eq_geom,list_c_line_geom = lib.run(p_start_a,p_start_b,p_end)
+        lib.addPointL(list_eq_geom,crs)
+        lib.addLine_GList(list_c_line_geom,crs)
+        #result_feat = []
+        #for i in result:
+        #    f = QgsFeature()
+        #    f.setGeometry(i)
+        #    result_feat.append(f)
         #self.layOpt.addPointL(result,crs)
-        self.layOpt.pointsToLine(result_feat,crs)
-        #self.dlg.textBrowser.append(str(len(list_geom_a)))
-        #self.dlg.textBrowser.append(str(len(list_geom_b)))
-        #self.dlg.textBrowser.append(str(len(result)))
+        #self.layOpt.pointsToLine(result_feat,crs)
+        #self.dlg.textBrowser.append(p_start_a.toString())
+        #self.dlg.textBrowser.append(p_start_b.toString())
+        #self.dlg.textBrowser.append(p_end.toString())
 
     def adj_deploy(self):
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())

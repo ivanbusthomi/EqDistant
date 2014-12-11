@@ -98,8 +98,8 @@ class LayerOperation(object):
         point_layer_prov = point_layer.dataProvider()
         point_layer_prov.addFeatures(list_point_feat)
         QgsMapLayerRegistry.instance().addMapLayer(point_layer)
-    def addLine(self,line_geom):
-        line_layer = QgsVectorLayer("LineString", "Line Result", "memory")
+    def addLine(self,line_geom,crs):
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Line Result", "memory")
         line_layer_prov = line_layer.dataProvider()
         line_feat = QgsFeature()
         line_feat.setGeometry(line_geom)
@@ -110,8 +110,8 @@ class LayerOperation(object):
         prov_ = line_layer.dataProvider()
         prov_.addFeatures(line_list)
         QgsMapLayerRegistry.instance().addMapLayer(line_layer)
-    def addPolygon(self, poly_geom):
-        poly_layer = QgsVectorLayer("Polygon", "Polygon Result", "memory")
+    def addPolygon(self, poly_geom,crs):
+        poly_layer = QgsVectorLayer("Polygon?crs="+crs, "Polygon Result", "memory")
         poly_layer_prov =poly_layer.dataProvider()
         poly_feat = QgsFeature()
         poly_feat.setGeometry(poly_geom)

@@ -52,50 +52,46 @@ class OppositeLibrary(object):
         py = ym
         if az>0 and az<90:
             if side > 0:
-                #kanan
                 px = xm+dist*math.cos(math.radians(az))
                 py = ym-dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             elif side < 0:
-                #kiri
                 px = xm-dist*math.cos(math.radians(az))
                 py = ym+dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             else:
                 print "side value 1 error"
         elif az>90 and az<180:
             if side > 0:
                 px = xm+dist*math.cos(math.radians(az))
                 py = ym-dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             elif side < 0:
                 px = xm-dist*math.cos(math.radians(az))
                 py = ym+dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             else:
                 print "side value 2 error"
         elif az<0 and az>-90:
             if side > 0:
-                #kanan
                 px = xm+dist*math.cos(math.radians(az))
                 py = ym-dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             elif side < 0:
-                #kiri
                 px = xm-dist*math.cos(math.radians(az))
                 py = ym+dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             else:
                 print "side value 3 error"
         elif az<-90 and az>-180:
             if side > 0:
                 px = xm+dist*math.cos(math.radians(az))
                 py = ym-dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             elif side < 0:
                 px = xm-dist*math.cos(math.radians(az))
                 py = ym+dist*math.sin(math.radians(az))
-                print az, side
+                #print az, side
             else:
                 print "side value 4 error"
         else:
@@ -183,18 +179,18 @@ class OppositeLibrary(object):
         dist = self.distanceFromPoint(p_mid_s,p_mid_e)
         geom_pp_line = self.perpendicular_line(dist,p_start_a,p_start_b,p_mid_e)
         list_eq_geom = []
-        eq_geom, r_feat, stop_ = self.iter_point(p_start_a,p_start_b,mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+        eq_geom, r_feat, stop_ = self.iter_point(p_start_a,p_start_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
         while stop_ == False:
             if r_feat['ket']=="A":
                 p_iter_a = r_feat.geometry().asPoint()
-                print "next point is A"
+                #print "next point is A"
             elif r_feat['ket']=="B":
                 p_iter_b = r_feat.geometry().asPoint()
-                print "next point is B"
+                #print "next point is B"
             list_eq_geom.append(eq_geom)
             dist = self.distanceFromPoint(eq_geom.asPoint(),p_mid_e)
             geom_pp_line = self.perpendicular_line(dist,p_iter_a,p_iter_b,p_mid_e)
-            eq_geom, r_feat, stop_ = self.iter_point(p_iter_a,p_iter_b,mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+            eq_geom, r_feat, stop_ = self.iter_point(p_iter_a,p_iter_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
         else:
             print "stop is true"
         return list_eq_geom

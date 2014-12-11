@@ -7,14 +7,17 @@ p_end = QgsPoint(1321.42,274.379)
 """
 from qgis.core import *
 from PyQt4.QtCore import QVariant
+#from lay_lib import LayerOperation
 import math
 
 class AdjacentLibrary(object):
-    def __init__(self,list_line_geom_a,list_line_geom_b,claim_dist,intv):
+    def __init__(self,list_line_geom_a,list_line_geom_b,claim_dist,intv,crs):
         self.claim_dist = claim_dist
         self.intv = intv
         self.list_line_geom_a = list_line_geom_a
         self.list_line_geom_b = list_line_geom_b
+        self.crs = crs
+        #self.lay_op = LayerOperation()
 
     def pointinline(self, point, list_line_geom):
         result = {}
@@ -52,20 +55,20 @@ class AdjacentLibrary(object):
         ket = QgsField("ket",QVariant.String)
         flds.append(ket)
         for lineGeom in list_lineGeom_a:
-            intrs_a = lineGeom.intersection(buff_).asMultiPolyline()
+            intrs_a = lineGeom.intersection(buff_).asGeometryCollection()
             for line_a in intrs_a:
                 feat = QgsFeature()
                 feat.setFields(flds)
-                n = self.pointinline(eq_geom.asPoint(),[QgsGeometry().fromPolyline(line_a)])
+                n = self.pointinline(eq_geom.asPoint(),[line_a])
                 feat.setGeometry(QgsGeometry().fromPoint(n))
                 feat.setAttributes(["A"])
                 list_intrsFeat.append(feat)
         for lineGeom in list_lineGeom_b:
             intrs_b = lineGeom.intersection(buff_).asGeometryCollection()
-            for i in intrs_b:
+            for line_b in intrs_b:
                 feat = QgsFeature()
                 feat.setFields(flds)
-                n = self.pointinline(eq_geom.asPoint(),[i])
+                n = self.pointinline(eq_geom.asPoint(),[line_b])
                 feat.setGeometry(QgsGeometry().fromPoint(n))
                 feat.setAttributes(["B"])
                 list_intrsFeat.append(feat)
@@ -75,7 +78,7 @@ class AdjacentLibrary(object):
             f=0
         return f
 
-    def iterPoint(self,p_iter_a,p_iter_b,list_lineGeom_a,list_lineGeom_b, pp_line_geom):
+    def iterPoint(self,p_iter_a,p_iter_b,p_end,list_lineGeom_a,list_lineGeom_b, pp_line_geom):
         current_dist = 0
         eq_geom = QgsGeometry()
         feat = QgsFeature()
@@ -86,8 +89,18 @@ class AdjacentLibrary(object):
             buff_ = eq_geom.buffer(dist_a,25)
             feat = self.intersectFunction(buff_,eq_geom,list_lineGeom_a,list_lineGeom_b)
             current_dist= current_dist + self.intv
+            print current_dist, pp_line_geom.length()
+            dist_mid_a = math.sqrt(p_iter_a.sqrDist(p_end))
+            dist_mid_b = math.sqrt(p_iter_b.sqrDist(p_end))
             if feat != 0 and feat.geometry().asPoint()!=p_iter_a and feat.geometry().asPoint()!=p_iter_b:
-                break
+                f_point = feat.geometry().asPoint()
+                dist_mid_f = math.sqrt(f_point.sqrDist(p_end))
+                if feat['ket']=="A" and dist_mid_f<dist_mid_a:
+                    break
+                elif feat['ket']=="B" and dist_mid_f<dist_mid_b:
+                    break
+                else:
+                    continue
             else:
                 continue
         else:
@@ -130,47 +143,191 @@ class AdjacentLibrary(object):
         p = QgsPoint(xP,yP)
         return p
 
-    def something(self,p_start_a,p_start_b,p_end):
+    def slope(self, pa, pb):
+        xa,ya = pa.x(),pa.y()
+        xb,yb = pb.x(),pb.y()
+        m = (yb-ya)/(xb-xa)
+        return m
+
+    #-------------------------------------------------------
+    def find_side(self, pa, pb, p_test):
+        xa = pa.x()
+        ya = pa.y()
+        xb = pb.x()
+        yb = pb.y()
+        x_test = p_test.x()
+        y_test = p_test.y()
+        side = (x_test-xa)*(yb-ya)-(y_test-ya)*(xb-xa)
+        return side
+    def azm(self, pa, pb):
+        az_ = pa.azimuth(pb)
+        if az_>0:
+            az = az_
+        else:
+            az = 360+az_
+        return az
+    def perpendicular_line(self, pa, pb, pp, p_end):
+        '''
+        pa = p_iter_a
+        pb = p_iter_b
+        pp = perpendicular point. in the next iteration it will be input as eq_point
+        p_end = end_point
+        '''
+        p_mid = self.findMid(pa,pb)
+        side_pp = self.find_side(pa,pb,pp)
+        side_end = self.find_side(pa,pb,p_end)
+        d_a = math.sqrt(pp.sqrDist(p_mid))
+        d_b = math.sqrt(pp.sqrDist(p_end))
+        c =(side_pp/side_end)
+        if c<0:
+            dx_a = p_mid.x()-pp.x()
+            dy_a = p_mid.y()-pp.y()
+        else:# (side_pp/side_end)>0:
+            dx_a = pp.x()- p_mid.x()
+            dy_a = pp.y()- p_mid.y()
+        dx_b = dx_a*d_b/d_a
+        dy_b = dy_a*d_b/d_a
+        if c<0:
+            x_pp_b = pp.x()+dx_b
+            y_pp_b = pp.y()+dy_b
+        else:
+            x_pp_b = p_mid.x()+dx_b
+            y_pp_b = p_mid.y()+dy_b
+        pp_b = QgsPoint(x_pp_b,y_pp_b)
+        geom_pp_line = QgsGeometry().fromPolyline([pp,pp_b])
+        return geom_pp_line
+    #--------new run
+    def delta_(self,az,side):
+        if az>0 and az<=90:         # 1st Quadrant
+            if side<0:
+                dx = -self.claim_dist*math.cos(math.radians(az))
+                dy = self.claim_dist*math.sin(math.radians(az))
+            else:
+                dx = self.claim_dist*math.cos(math.radians(az))
+                dy = -self.claim_dist*math.sin(math.radians(az))
+        elif az>90 and az<=180:     # 2nd Quadrant
+            if side<0:
+                dx = -self.claim_dist*math.cos(math.radians(az))
+                dy = self.claim_dist*math.sin(math.radians(az))
+            else:
+                dx = self.claim_dist*math.cos(math.radians(az))
+                dy = -self.claim_dist*math.sin(math.radians(az))
+        elif az>180 and az<=270:    # 3rd Quadrant
+            if side > 0:
+                dx = self.claim_dist*math.cos(math.radians(az))
+                dy = -self.claim_dist*math.sin(math.radians(az))
+            else:
+                dx = -self.claim_dist*math.cos(math.radians(az))
+                dy = self.claim_dist*math.sin(math.radians(az))
+        elif az>270 and az<=360:    # 4th Quadrant
+            if side > 0:
+                dx = self.claim_dist*math.cos(math.radians(az))
+                dy = -self.claim_dist*math.sin(math.radians(az))
+            else:
+                dx = -self.claim_dist*math.cos(math.radians(az))
+                dy = self.claim_dist*math.sin(math.radians(az))
+        else:
+            raise ValueError("azimuth error")
+        return dx,dy
+    def run(self,p_start_a,p_start_b,p_end):
+        p_mid = self.findMid(p_start_a,p_start_b)
+        az = self.azm(p_start_a,p_start_b)
+        side_end =self.find_side(p_start_a,p_start_b,p_end)
+        side = -side_end                # reverse
+        dx,dy = self.delta_(az,side)
+        xp = p_mid.x()+ dx
+        yp = p_mid.y()+ dy
+        pp = QgsPoint(xp,yp)    # perpendicular point
+        geom_pp_line = self.perpendicular_line(p_start_a,p_start_b,pp,p_end) #perpendicular line to end_point
+        #pg = QgsGeometry.fromPoint(pp)
+        #line_pp = QgsGeometry.fromPolyline([pp,p_mid])   #perpendicular line to mid_point
+        #line_base = QgsGeometry.fromPolyline([p_start_a,p_start_b])
+        #geom_pp_line_base = self.perpendicular_line(self.claim_dist,p_start_a,p_start_b,pp)
+        #self.addPointG(pg,self.crs)
+        #self.addLine(line_pp,self.crs)
+        #self.addLine(line_base,self.crs)
+        #self.addLine(geom_pp_line,self.crs)
+
+        #------------------------ iteration
         p_iter_a = p_start_a
         p_iter_b = p_start_b
-        p_mid = self.findMid(p_start_a,p_start_b)
-        az = p_start_a.azimuth(p_start_b)
-        g_line_base = QgsGeometry.fromPolyline([p_start_a,p_start_b])
-        grad_ = (p_start_b.y()-p_start_a.y())/(p_start_b.x()-p_start_a.x())
-        g_end = QgsGeometry().fromPoint(p_end)
-        buff_base = g_end.buffer(self.claim_dist,50)
-        if g_line_base.intersects(buff_base):
-            reverse = 0
-            p_base = self.ppPoint(grad_,reverse,p_mid,self.claim_dist,az)
-            g_ppline_base = QgsGeometry().fromPolyline([p_base,p_mid])
-            buff_line = buff_base.convertToType(1)
-            pp = g_ppline_base.intersection(buff_line).asPoint()
-            geom_ppline = QgsGeometry.fromPolyline([pp,p_mid])
-        else:
-            reverse = 1
-            p_base = self.ppPoint(grad_,reverse,p_mid,self.claim_dist,az)
-            g_ppline_base = QgsGeometry().fromPolyline([p_mid,p_base])
-            buff_line = buff_base.convertToType(1)
-            pp = g_ppline_base.intersection(buff_line).asPoint()
-            geom_ppline = QgsGeometry.fromPolyline([p_mid,pp])
         list_eq_geom = []
-        eq_geom, r_feat, stop_ = self.iterPoint(p_start_a,p_start_b,self.list_line_geom_a,self.list_line_geom_b, geom_ppline)
-        while stop_==False:
-            #addLine(geom_ppline,crs)
-            #addPolygon(buffer_,crs)
+        list_c_line_geom = []
+        eq_geom, r_feat, stop_ = self.iterPoint(p_iter_a,p_iter_b,p_end,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+        while stop_ == False:
+            #create control line
+            eq_point = eq_geom.asPoint()
+            r_point = r_feat.geometry().asPoint()
+            cline_geom = QgsGeometry.fromMultiPolyline([[eq_point,p_iter_a],[eq_point,p_iter_b],[eq_point,r_point]])
+            list_c_line_geom.append(cline_geom)
             if r_feat['ket']=="A":
-                p_iter_a = r_feat.geometry().asPoint()
-                print "next point is A"
+                p_iter_a = r_point
+                print "next point is A : "+str(p_iter_a)
             elif r_feat['ket']=="B":
-                p_iter_b = r_feat.geometry().asPoint()
-                print "next point is B"
+                p_iter_b = r_point
+                print "next point is B : "+str(p_iter_b)
             list_eq_geom.append(eq_geom)
-            m = self.findMid(p_iter_a,p_iter_b)
-            if reverse == 0:
-                geom_ppline = QgsGeometry().fromPolyline([eq_geom.asPoint(),m])
-            else:
-                geom_ppline = QgsGeometry().fromPolyline([m,eq_geom.asPoint()])
-            eq_geom, r_feat, stop_ = self.iterPoint(p_iter_a,p_iter_b,self.list_line_geom_a,self.list_line_geom_b, geom_ppline)
+            geom_pp_line = self.perpendicular_line(p_iter_a,p_iter_b,eq_point,p_end)
+            eq_geom, r_feat, stop_= self.iterPoint(p_iter_a,p_iter_b,p_end,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+            self.addLine(geom_pp_line,self.crs)
         else:
-            print "stop is true"
-        return list_eq_geom
+            print "iteration stopped succesfully"
+        print len(list_eq_geom)
+        return list_eq_geom,list_c_line_geom
+
+    def addPointG(self,point_geom,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
+        point_layer_prov = point_layer.dataProvider()
+        point_feat = QgsFeature()
+        point_feat.setGeometry(point_geom)
+        point_layer_prov.addFeatures([point_feat])
+        QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+    def addLine(self,line_geom,crs):
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Line Result", "memory")
+        line_layer_prov = line_layer.dataProvider()
+        line_feat = QgsFeature()
+        line_feat.setGeometry(line_geom)
+        line_layer_prov.addFeatures([line_feat])
+        QgsMapLayerRegistry.instance().addMapLayer(line_layer)
+
+    def addLine_GList(self,geom_list,crs):
+        line_list = []
+        for i in geom_list:
+            feat = QgsFeature()
+            feat.setGeometry(i)
+            line_list.append(feat)
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Construction Line", "memory")
+        prov_ = line_layer.dataProvider()
+        prov_.addFeatures(line_list)
+        QgsMapLayerRegistry.instance().addMapLayer(line_layer)
+
+    def addPointL(self,list_point_geom,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
+        point_layer_prov = point_layer.dataProvider()
+        list_feat = []
+        for geom in list_point_geom:
+            point_feat = QgsFeature()
+            point_feat.setGeometry(geom)
+            list_feat.append(point_feat)
+        point_layer_prov.addFeatures(list_feat)
+        QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+
+    def addPolygon(self, poly_geom,crs):
+        poly_layer = QgsVectorLayer("Polygon?crs="+crs, "Polygon Result", "memory")
+        poly_layer_prov =poly_layer.dataProvider()
+        poly_feat = QgsFeature()
+        poly_feat.setGeometry(poly_geom)
+        poly_layer_prov.addFeatures([poly_feat])
+        QgsMapLayerRegistry.instance().addMapLayer(poly_layer)
+
+    def test(self,p_start_a,p_start_b,p_end):
+        p_mid = self.findMid(p_start_a,p_start_b)
+        az = self.azm(p_start_a,p_start_b)
+        side_end =self.find_side(p_start_a,p_start_b,p_end)
+        side = -side_end                # reverse
+        dx,dy = self.delta_(az,side)
+        xp = p_mid.x()+ dx
+        yp = p_mid.y()+ dy
+        pp = QgsPoint(xp,yp)    # perpendicular point
+        geom_pp_line = self.perpendicular_line(p_start_a,p_start_b,pp,p_end)
+        self.addLine(geom_pp_line,self.crs)
