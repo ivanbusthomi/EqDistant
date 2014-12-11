@@ -31,6 +31,7 @@ from eq_distant_dialog import EqDistantDialog, EqDistantDialogHelp
 from libs.adj_lib_new import AdjacentLibrary
 from libs.lay_lib import LayerOperation
 from libs.opp_lib import OppositeLibrary
+from libs.opp_lib_new import OppositeLibrary as OppositeLibraryNew
 import os.path
 
 class EqDistant:
@@ -258,6 +259,39 @@ class EqDistant:
         #if self.dlg.checkBox_eLine.isChecked():
         #    self.layOpt.addLine_FList(construction_line)
         self.dlg.close()
+
+    def opp_deploy_new(self):
+        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+        crs = layer_a.crs().authid()
+        intv = self.dlg.opp_intv.value()
+        claim_dist = 1500 #int(self.dlg.opp_claim_dist.text())
+        # list initiation
+        list_feat_a=[]
+        for feat_a in layer_a.getFeatures():list_feat_a.append(feat_a)
+        list_feat_b=[]
+        for feat_b in layer_b.getFeatures():list_feat_b.append(feat_b)
+        list_geom_a=[]
+        for feat_a in list_feat_a:list_geom_a.append(feat_a.geometry())
+        list_geom_b=[]
+        for feat_b in list_feat_b:list_geom_b.append(feat_b.geometry())
+        # input point inititation
+        start_point_a = self.layOpt.pointinline(self.start_a,list_geom_a)
+        start_point_b = self.layOpt.pointinline(self.start_b,list_geom_b)
+        end_point_a = self.layOpt.pointinline(self.end_a,list_geom_a)
+        end_point_b = self.layOpt.pointinline(self.end_b,list_geom_b)
+        # main function
+        lib = OppositeLibraryNew(list_geom_a,list_geom_b,claim_dist,intv)
+        mid_s = lib.find_mid(start_point_a,start_point_b)
+        mid_e = lib.find_mid(end_point_a,end_point_b)
+        result = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
+        #self.layOpt.addPointL([start_point_a,mid_s,start_point_b,end_point_a,mid_e,end_point_b],crs)
+        #self.layOpt.addPointL(result,crs)
+        self.dlg.textBrowser.append(str(start_point_a))
+        self.dlg.textBrowser.append(str(start_point_b))
+        self.dlg.textBrowser.append(str(end_point_a))
+        self.dlg.textBrowser.append(str(end_point_b))
+
     #---------------- Opposite State Tools  #
     def adj_pressedStartA(self):
         self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
@@ -358,6 +392,7 @@ class EqDistant:
         self.dlg.textBrowser.append(p_end.toString())
         #self.layOpt.addPointL(list_eq_geom)
 
+    #------------- main implementation
     def checkInputLayer(self):
         if self.dlg.inputLayerA.currentIndex()==self.dlg.inputLayerB.currentIndex():
             self.dlg.textBrowser.clear()
@@ -386,7 +421,7 @@ class EqDistant:
         # connect adjacent state map tools
         self.dlg.adj_btnStartA.pressed.connect(self.adj_pressedStartA)
         self.dlg.adj_btnStartB.pressed.connect(self.adj_pressedStartB)
-        self.dlg.opp_btnRun.pressed.connect(self.opp_deploy)
+        self.dlg.opp_btnRun.pressed.connect(self.opp_deploy_new)
         self.dlg.adj_btnRun.pressed.connect(self.adj_deploy_new)
         # layer checking from map canvas    #
         layers_ = QgsMapLayerRegistry.instance().mapLayers().values()
