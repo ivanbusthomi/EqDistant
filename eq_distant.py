@@ -23,7 +23,8 @@
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon, QMessageBox
 from qgis.core import *
-from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint, QgsMapToolPan
+from qgis.analysis import QgsGeometryAnalyzer
+from qgis.gui import QgsMessageBar, QgsMapToolEmitPoint, QgsMapToolPan, QgsLegendInterface
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
@@ -256,8 +257,8 @@ class EqDistant:
         self.layOpt.addPointF(final_result,crs)
         if self.dlg.checkBox_eLine.isChecked():
             self.layOpt.pointsToLine(final_result,crs)
-        #if self.dlg.checkBox_eLine.isChecked():
-        #    self.layOpt.addLine_FList(construction_line)
+        if self.dlg.checkBox_eLine.isChecked():
+            self.layOpt.addLine_FList(construction_line)
         self.dlg.close()
 
     def opp_deploy_new(self):
@@ -265,7 +266,7 @@ class EqDistant:
         layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
         crs = layer_a.crs().authid()
         intv = self.dlg.opp_intv.value()
-        claim_dist = 1500 #int(self.dlg.opp_claim_dist.text())
+        #claim_dist = int(self.dlg.opp_claim_dist.text())*1852
         # list initiation
         list_feat_a=[]
         for feat_a in layer_a.getFeatures():list_feat_a.append(feat_a)
@@ -281,17 +282,13 @@ class EqDistant:
         end_point_a = self.layOpt.pointinline(self.end_a,list_geom_a)
         end_point_b = self.layOpt.pointinline(self.end_b,list_geom_b)
         # main function
-        lib = OppositeLibrary(list_geom_a,list_geom_b,claim_dist,intv)
-        #mid_s = lib.find_mid(start_point_a,start_point_b)
-        #mid_e = lib.find_mid(end_point_a,end_point_b)
-        result = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
-        #self.layOpt.addPointL([start_point_a,mid_s,start_point_b,end_point_a,mid_e,end_point_b],crs)
-        #self.layOpt.addPointL(result,crs)
+        lib = OppositeLibrary(self.iface,list_geom_a,list_geom_b,intv,crs)
+        result, cline_list = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
+        # result handling
         self.dlg.textBrowser.append(str(len(result)))
-        self.layOpt.addPointL(result,crs)
-        #self.dlg.textBrowser.append(start_point_b.toString())
-        #self.dlg.textBrowser.append(end_point_a.toString())
-        #self.dlg.textBrowser.append(end_point_b.toString())
+        lib.addPointL(result,crs)
+        lib.addLine_GList(cline_list,crs)
+
 
     #---------------- Opposite State Tools  #
     def adj_pressedStartA(self):
@@ -322,7 +319,7 @@ class EqDistant:
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
         layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
         intv = self.dlg.adj_intv.value()
-        claim_dist = int(self.dlg.adj_claim_dist.text())
+        claim_dist = int(self.dlg.adj_claim_dist.text())*1852
         list_feat_a = []
         list_feat_b = []
         for feat in layer_a.getFeatures():list_feat_a.append(feat)
@@ -332,7 +329,7 @@ class EqDistant:
         for feat in list_feat_a:list_geom_a.append(feat.geometry())
         for feat in list_feat_b:list_geom_b.append(feat.geometry())
         crs = layer_a.crs().authid()
-        lib = AdjacentLibrary(list_geom_a,list_geom_b,claim_dist,intv,crs)
+        lib = AdjacentLibrary(self.iface,list_geom_a,list_geom_b,claim_dist,intv,crs)
         p_start_a = self.layOpt.pointinline(self.adj_start_a,list_geom_a)
         p_start_b = self.layOpt.pointinline(self.adj_start_b,list_geom_b)
         ends = []
@@ -351,9 +348,14 @@ class EqDistant:
         else:
             g_end = ends[0]
             p_end = g_end.asPoint()
+        #layer group
+        #self.iface.legendInterface().addGroup("creation_line",True,-1)
         list_eq_geom,list_c_line_geom = lib.run(p_start_a,p_start_b,p_end)
         lib.addPointL(list_eq_geom,crs)
-        lib.addLine_GList(list_c_line_geom,crs)
+        if self.dlg.checkBox_eLine.isChecked():
+            lib.pointsToLine(list_geom_a,crs)
+        if self.dlg.checkBox_eLine.isChecked():
+            lib.addLine_GList(list_c_line_geom,crs)
         #result_feat = []
         #for i in result:
         #    f = QgsFeature()

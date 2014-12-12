@@ -1,14 +1,16 @@
 from qgis.core import *
+from qgis.gui import QgsLegendInterface
 from PyQt4.QtCore import QVariant
 import math
 
 
 class OppositeLibrary(object):
-    def __init__(self, list_line_geom_a, list_line_geom_b, claim_dist, intv):
+    def __init__(self,iface, list_line_geom_a, list_line_geom_b, intv,crs):
+        self.iface = iface
         self.list_line_geom_a = list_line_geom_a
         self.list_line_geom_b = list_line_geom_b
-        self.claim_dist = claim_dist
         self.intv = intv
+        self.crs = crs
 
     def find_mid(self, pt_a, pt_b):
         xa = pt_a.x()
@@ -171,6 +173,7 @@ class OppositeLibrary(object):
         return nearest
 
     def run(self,p_start_a,p_start_b,p_end_a,p_end_b):
+        #self.iface.legendInterface().addGroup("creation line")
         p_mid_s = self.find_mid(p_start_a,p_start_b)
         p_mid_e = self.find_mid(p_end_a,p_end_b)
         #-------------------------------------
@@ -179,6 +182,7 @@ class OppositeLibrary(object):
         dist = self.distanceFromPoint(p_mid_s,p_mid_e)
         geom_pp_line = self.perpendicular_line(dist,p_start_a,p_start_b,p_mid_e)
         list_eq_geom = []
+        list_c_line = []
         eq_geom, r_feat, stop_ = self.iter_point(p_start_a,p_start_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
         while stop_ == False:
             if r_feat['ket']=="A":
@@ -187,11 +191,47 @@ class OppositeLibrary(object):
             elif r_feat['ket']=="B":
                 p_iter_b = r_feat.geometry().asPoint()
                 #print "next point is B"
+            eq_point = eq_geom.asPoint()
+            r_point = r_feat.geometry().asPoint()
+            c_line = QgsGeometry().fromMultiPolyline([[eq_point,p_iter_a],[eq_point,p_iter_b],[eq_point,r_point]])
+            list_c_line.append(c_line)
             list_eq_geom.append(eq_geom)
             dist = self.distanceFromPoint(eq_geom.asPoint(),p_mid_e)
             geom_pp_line = self.perpendicular_line(dist,p_iter_a,p_iter_b,p_mid_e)
             eq_geom, r_feat, stop_ = self.iter_point(p_iter_a,p_iter_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+            #self.addLine(geom_pp_line,self.crs)
         else:
             print "stop is true"
-        return list_eq_geom
+        return list_eq_geom,list_c_line
     #--------------------------------------------------------------
+    def addLine(self,line_geom,crs):
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Line Result", "memory")
+        line_layer_prov = line_layer.dataProvider()
+        line_feat = QgsFeature()
+        line_feat.setGeometry(line_geom)
+        line_layer_prov.addFeatures([line_feat])
+        #return line_layer
+        QgsMapLayerRegistry.instance().addMapLayer(line_layer)
+        self.iface.legendInterface().moveLayer(line_layer,0)
+    def addPointL(self,list_point_geom,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
+        point_layer_prov = point_layer.dataProvider()
+        list_feat = []
+        for geom in list_point_geom:
+            point_feat = QgsFeature()
+            point_feat.setGeometry(geom)
+            list_feat.append(point_feat)
+        point_layer_prov.addFeatures(list_feat)
+        QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+
+    def addLine_GList(self,geom_list,crs):
+        line_list = []
+        for i in geom_list:
+            feat = QgsFeature()
+            feat.setGeometry(i)
+            line_list.append(feat)
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Construction Line", "memory")
+        prov_ = line_layer.dataProvider()
+        prov_.addFeatures(line_list)
+        QgsMapLayerRegistry.instance().addMapLayer(line_layer)
+
