@@ -86,7 +86,7 @@ class AdjacentLibrary(object):
             buff_ = eq_geom.buffer(dist_a,25)
             feat = self.intersectFunction(buff_,eq_geom,list_lineGeom_a,list_lineGeom_b)
             current_dist= current_dist + self.intv
-            print current_dist, pp_line_geom.length()
+            #print current_dist, pp_line_geom.length()
             dist_mid_a = math.sqrt(p_iter_a.sqrDist(p_end))
             dist_mid_b = math.sqrt(p_iter_b.sqrDist(p_end))
             if feat != 0 and feat.geometry().asPoint()!=p_iter_a and feat.geometry().asPoint()!=p_iter_b:
@@ -204,10 +204,10 @@ class AdjacentLibrary(object):
             list_c_line_geom.append(cline_geom)
             if r_feat['ket']=="A":
                 p_iter_a = r_point
-                print "next point is A : "+str(p_iter_a)
+                #print "next point is A : "+str(p_i
             elif r_feat['ket']=="B":
                 p_iter_b = r_point
-                print "next point is B : "+str(p_iter_b)
+                #print "next point is B : "+str(p_iter_b)
             list_eq_geom.append(eq_geom)
             geom_pp_line = self.perpendicular_line(p_iter_a,p_iter_b,eq_point,p_end)
             eq_geom, r_feat, stop_= self.iterPoint(p_iter_a,p_iter_b,p_end,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
@@ -257,17 +257,16 @@ class AdjacentLibrary(object):
             point_feat.setGeometry(geom)
             list_feat.append(point_feat)
         point_layer_prov.addFeatures(list_feat)
-        QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+        #QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+        return point_layer
 
-    def pointsToLine(self,list_geom,crs):
+    def pointsToLine(self,p_layer,crs):
         #ft_list=[]
         #for f in point_layer.getFeatures():
         #    ft_list.append(f)
         ft_list=[]
-        for geom in list_geom:
-            ft = QgsFeature()
-            ft.setGeometry(geom)
-            ft_list.append(ft)
+        for p in p_layer.getFeatures():
+            ft_list.append(p)
         res_list = []                                                               #container for result
         s = ft_list[0]                                                            #start point
         s_point = s.geometry().asPoint()

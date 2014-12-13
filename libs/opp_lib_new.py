@@ -110,6 +110,7 @@ class OppositeLibrary(object):
         geom_eq = QgsGeometry()
         feat = QgsFeature()
         stop_ = False
+        buffer_ = QgsGeometry()
         while current_distance<=geom_pp_line.length():
             geom_eq = geom_pp_line.interpolate(current_distance)
             dist_a = math.sqrt(geom_eq.asPoint().sqrDist(p_a))
@@ -130,7 +131,7 @@ class OppositeLibrary(object):
                 continue
         else:
             stop_ = True
-        return geom_eq,feat,stop_
+        return geom_eq,feat,stop_,buffer_
 
     def intersect_func(self, buff_, geom_eq, list_line_geom_a,list_line_geom_b):
         list_intrs_feat = []
@@ -183,8 +184,9 @@ class OppositeLibrary(object):
         geom_pp_line = self.perpendicular_line(dist,p_start_a,p_start_b,p_mid_e)
         list_eq_geom = []
         list_c_line = []
-        eq_geom, r_feat, stop_ = self.iter_point(p_start_a,p_start_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+        eq_geom, r_feat, stop_ ,buffs= self.iter_point(p_start_a,p_start_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
         while stop_ == False:
+            #self.addLine(buffs.convertToType(1),self.crs)
             if r_feat['ket']=="A":
                 p_iter_a = r_feat.geometry().asPoint()
                 #print "next point is A"
@@ -198,7 +200,7 @@ class OppositeLibrary(object):
             list_eq_geom.append(eq_geom)
             dist = self.distanceFromPoint(eq_geom.asPoint(),p_mid_e)
             geom_pp_line = self.perpendicular_line(dist,p_iter_a,p_iter_b,p_mid_e)
-            eq_geom, r_feat, stop_ = self.iter_point(p_iter_a,p_iter_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
+            eq_geom, r_feat, stop_,buffs = self.iter_point(p_iter_a,p_iter_b,p_mid_e,self.list_line_geom_a,self.list_line_geom_b,geom_pp_line)
             #self.addLine(geom_pp_line,self.crs)
         else:
             print "stop is true"
@@ -213,16 +215,6 @@ class OppositeLibrary(object):
         #return line_layer
         QgsMapLayerRegistry.instance().addMapLayer(line_layer)
         self.iface.legendInterface().moveLayer(line_layer,0)
-    def addPointL(self,list_point_geom,crs):
-        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
-        point_layer_prov = point_layer.dataProvider()
-        list_feat = []
-        for geom in list_point_geom:
-            point_feat = QgsFeature()
-            point_feat.setGeometry(geom)
-            list_feat.append(point_feat)
-        point_layer_prov.addFeatures(list_feat)
-        QgsMapLayerRegistry.instance().addMapLayer(point_layer)
 
     def addLine_GList(self,geom_list,crs):
         line_list = []
@@ -235,3 +227,42 @@ class OppositeLibrary(object):
         prov_.addFeatures(line_list)
         QgsMapLayerRegistry.instance().addMapLayer(line_layer)
 
+    def addPointL(self,list_point_geom,crs):
+        point_layer = QgsVectorLayer("Point?crs="+crs,"Point","memory")
+        point_layer_prov = point_layer.dataProvider()
+        list_feat = []
+        for geom in list_point_geom:
+            point_feat = QgsFeature()
+            point_feat.setGeometry(geom)
+            list_feat.append(point_feat)
+        point_layer_prov.addFeatures(list_feat)
+        #QgsMapLayerRegistry.instance().addMapLayer(point_layer)
+        return point_layer
+
+    def pointsToLine(self,p_layer,crs):
+        #ft_list=[]
+        #for f in point_layer.getFeatures():
+        #    ft_list.append(f)
+        ft_list=[]
+        for p in p_layer.getFeatures():
+            ft_list.append(p)
+        res_list = []                                                               #container for result
+        s = ft_list[0]                                                            #start point
+        s_point = s.geometry().asPoint()
+        res_list.append(s_point)                                                #add start to result list
+        ft_list.remove(s)
+        while len(ft_list)>0:
+            n_feat = self.nearestFeat(s_point, ft_list)
+            n_point = n_feat.geometry().asPoint()
+            res_list.append(n_point)
+            ft_list.remove(n_feat)
+            s_point = n_point
+            #print len(ft_list)
+        #convert list of point to line layer
+        line_layer = QgsVectorLayer("LineString?crs="+crs, "Line Result", "memory")
+        line_layer_prov = line_layer.dataProvider()
+        feat = QgsFeature()
+        line_geom = QgsGeometry.fromPolyline(res_list)
+        feat.setGeometry(line_geom)
+        line_layer_prov.addFeatures([feat])
+        QgsMapLayerRegistry.instance().addMapLayer(line_layer)

@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="0" colspan="6">
+   <item row="0" column="0" colspan="5">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="labelB_2">
@@ -38,8 +38,11 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="0" colspan="6">
+   <item row="5" column="0" colspan="5">
     <widget class="QTabWidget" name="tabMenu">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -48,6 +51,15 @@
      </property>
      <property name="currentIndex">
       <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
+     </property>
+     <property name="movable">
+      <bool>false</bool>
      </property>
      <widget class="QWidget" name="opposite">
       <attribute name="title">
@@ -464,7 +476,7 @@
      </property>
     </widget>
    </item>
-   <item row="13" column="1" colspan="5">
+   <item row="13" column="1" colspan="4">
     <widget class="QTextBrowser" name="textBrowser">
      <property name="maximumSize">
       <size>
@@ -474,15 +486,15 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="0" colspan="6">
+   <item row="14" column="0" colspan="5">
     <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="16" column="5">
-    <widget class="QPushButton" name="btnCancel">
+   <item row="16" column="4">
+    <widget class="QPushButton" name="btnClose">
      <property name="maximumSize">
       <size>
        <width>80</width>
@@ -490,7 +502,7 @@
       </size>
      </property>
      <property name="text">
-      <string>Cancel</string>
+      <string>Close</string>
      </property>
     </widget>
    </item>
@@ -507,19 +519,6 @@
      </property>
     </widget>
    </item>
-   <item row="16" column="4">
-    <widget class="QPushButton" name="btnOk">
-     <property name="maximumSize">
-      <size>
-       <width>80</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>OK</string>
-     </property>
-    </widget>
-   </item>
    <item row="15" column="2" rowspan="2" colspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -533,7 +532,7 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="0" colspan="6">
+   <item row="1" column="0" colspan="5">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -550,7 +549,7 @@
    <item row="2" column="1">
     <widget class="QCheckBox" name="checkBox_eLine">
      <property name="text">
-      <string>Equidistant Line</string>
+      <string>Equidistant Point</string>
      </property>
     </widget>
    </item>
@@ -561,7 +560,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="6">
+   <item row="4" column="0" colspan="5">
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

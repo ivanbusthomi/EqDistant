@@ -231,36 +231,6 @@ class EqDistant:
         self.clickTool.deactivate()
         self.dlg.show()
 
-    def opp_deploy(self):
-        # define layer from comboBox item #
-        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
-        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
-        crs = layer_a.crs().authid()
-        intv = self.dlg.opp_intv.value()
-        # convert line layer to point layer
-        point_layer_a = self.layOpt.lineToPoint(layer_a, "A",crs)
-        point_layer_b = self.layOpt.lineToPoint(layer_b, "B",crs)
-        # create list of features from point layer
-        feat_list_a = []
-        feat_list_b = []
-        for feat in point_layer_a.getFeatures():feat_list_a.append(feat)
-        for feat in point_layer_b.getFeatures():feat_list_b.append(feat)
-        lib = OppositeLibrary(point_layer_a,point_layer_b,intv)
-        #define start and end point in point_layer_a and point_layer_b
-        start_point_a = lib.nearestFeat(self.start_a,feat_list_a).geometry().asPoint()
-        start_point_b = lib.nearestFeat(self.start_b,feat_list_b).geometry().asPoint()
-        end_point_a = lib.nearestFeat(self.end_a,feat_list_a).geometry().asPoint()
-        end_point_b = lib.nearestFeat(self.end_b,feat_list_b).geometry().asPoint()
-        #mid_start = lib.findMid(start_point_a,start_point_b)
-        #mid_end = lib.findMid(end_point_a,end_point_b)
-        final_result, construction_line = lib.deploy(feat_list_a,feat_list_b,start_point_a,start_point_b,end_point_a,end_point_b)
-        self.layOpt.addPointF(final_result,crs)
-        if self.dlg.checkBox_eLine.isChecked():
-            self.layOpt.pointsToLine(final_result,crs)
-        if self.dlg.checkBox_eLine.isChecked():
-            self.layOpt.addLine_FList(construction_line)
-        self.dlg.close()
-
     def opp_deploy_new(self):
         layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
         layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
@@ -283,13 +253,14 @@ class EqDistant:
         end_point_b = self.layOpt.pointinline(self.end_b,list_geom_b)
         # main function
         lib = OppositeLibrary(self.iface,list_geom_a,list_geom_b,intv,crs)
-        result, cline_list = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
+        list_eq_geom, cline_list = lib.run(start_point_a,start_point_b,end_point_a,end_point_b)
         # result handling
-        self.dlg.textBrowser.append(str(len(result)))
-        lib.addPointL(result,crs)
-        lib.addLine_GList(cline_list,crs)
-
-
+        eq_layer = lib.addPointL(list_eq_geom,crs)
+        lib.pointsToLine(eq_layer,crs)
+        if self.dlg.checkBox_eLine.isChecked():
+            QgsMapLayerRegistry.instance().addMapLayer(eq_layer)
+        if self.dlg.checkBox_cLine.isChecked():
+            lib.addLine_GList(cline_list,crs)
     #---------------- Opposite State Tools  #
     def adj_pressedStartA(self):
         self.clickTool = QgsMapToolEmitPoint(self.iface.mapCanvas())
@@ -351,60 +322,34 @@ class EqDistant:
         #layer group
         #self.iface.legendInterface().addGroup("creation_line",True,-1)
         list_eq_geom,list_c_line_geom = lib.run(p_start_a,p_start_b,p_end)
-        lib.addPointL(list_eq_geom,crs)
+        eq_layer = lib.addPointL(list_eq_geom,crs)
+        lib.pointsToLine(eq_layer,crs)
         if self.dlg.checkBox_eLine.isChecked():
-            lib.pointsToLine(list_geom_a,crs)
-        if self.dlg.checkBox_eLine.isChecked():
+            QgsMapLayerRegistry.instance().addMapLayer(eq_layer)
+        if self.dlg.checkBox_cLine.isChecked():
             lib.addLine_GList(list_c_line_geom,crs)
-        #result_feat = []
-        #for i in result:
-        #    f = QgsFeature()
-        #    f.setGeometry(i)
-        #    result_feat.append(f)
-        #self.layOpt.addPointL(result,crs)
-        #self.layOpt.pointsToLine(result_feat,crs)
-        #self.dlg.textBrowser.append(p_start_a.toString())
-        #self.dlg.textBrowser.append(p_start_b.toString())
-        #self.dlg.textBrowser.append(p_end.toString())
-
-    def adj_deploy(self):
-        layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
-        layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
-        intv = self.dlg.adj_intv.value()
-        claim_dist = int(self.dlg.adj_claim_dist.text())
-        lib = AdjacentLibrary(layer_a,layer_b,claim_dist,intv)
-        list_feat_a = []
-        list_feat_b = []
-        for a in layer_a.getFeatures():list_feat_a.append(a)
-        for b in layer_b.getFeatures():list_feat_b.append(b)
-        list_geom_a=[]
-        list_geom_b=[]
-        for a in list_feat_a:list_geom_a.append(a.geometry())
-        for b in list_feat_b:list_geom_b.append(b.geometry())
-        start_point_a = self.layOpt.pointinline(self.adj_start_a,list_geom_a)
-        start_point_b = self.layOpt.pointinline(self.adj_start_b,list_geom_b)
-        ends = []
-        for geom_a in list_geom_a:
-            for geom_b in list_geom_b:
-                if geom_a.intersects(geom_b):
-                    e = geom_a.intersection(geom_b)
-                    ends.append(e)
-        if len(ends)>1:
-            raise ValueError("more than 1 intersection between layer a and layer b")
-        else:
-            p_end = ends[0].asPoint()
-        #list_eq_geom = lib.something(start_point_a,start_point_b,p_end)
-        self.dlg.textBrowser.append(p_end.toString())
-        #self.layOpt.addPointL(list_eq_geom)
 
     #------------- main implementation
     def checkInputLayer(self):
+        #self.dlg.textBrowser.append("changed")
         if self.dlg.inputLayerA.currentIndex()==self.dlg.inputLayerB.currentIndex():
             self.dlg.textBrowser.clear()
             self.dlg.textBrowser.append('Ups! Layer Input Gak Boleh Sama')
+            self.dlg.opp_btnRun.setEnabled(False)
+            self.dlg.adj_btnRun.setEnabled(False)
+            self.dlg.tabMenu.setEnabled(False)
         else:
             self.dlg.textBrowser.clear()
             self.dlg.textBrowser.append('Layer input siap')
+            self.dlg.opp_btnRun.setEnabled(True)
+            self.dlg.adj_btnRun.setEnabled(True)
+            self.dlg.tabMenu.setEnabled(True)
+            #-------------------------------
+            #r = 0
+            #layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+            #layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
+            #self.dlg.textBrowser.append(layer_a.name())
+            #self.dlg.textBrowser.append(layer_b.name())
 
     def checkPoint(self):
         self.dlg.textBrowser.append(str(self.adj_start_a)+' | '+self.adj_start_a.toString())
@@ -417,6 +362,9 @@ class EqDistant:
         self.dlg.inputLayerB.clear()
         self.dlg.inputLayerA.currentIndexChanged.connect(self.checkInputLayer)
         self.dlg.inputLayerB.currentIndexChanged.connect(self.checkInputLayer)
+        #define layer input
+        self.layer_a = self.dlg.inputLayerA.itemData(self.dlg.inputLayerA.currentIndex())
+        self.layer_b = self.dlg.inputLayerB.itemData(self.dlg.inputLayerB.currentIndex())
         # connect opposite state map tools
         self.dlg.opp_btnStartA.pressed.connect(self.pressedStartA)
         self.dlg.opp_btnStartB.pressed.connect(self.pressedStartB)
@@ -440,8 +388,8 @@ class EqDistant:
         else:
             # show the dialog
             self.dlg.show()
-
             # read line layers from mapCanvas, and add it to comboBox #
+            r = 0
             for layer in line_layers:
                 self.dlg.inputLayerA.addItem(layer.name(),layer)
                 self.dlg.inputLayerB.addItem(layer.name(),layer)
