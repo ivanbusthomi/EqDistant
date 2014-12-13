@@ -7,8 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>496</height>
+    <height>411</height>
    </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -30,7 +33,7 @@
    <item row="2" column="1">
     <widget class="QPushButton" name="btnClose">
      <property name="text">
-      <string>Close</string>
+      <string>Tutup</string>
      </property>
     </widget>
    </item>
@@ -62,7 +65,7 @@
         <x>0</x>
         <y>0</y>
         <width>435</width>
-        <height>310</height>
+        <height>198</height>
        </rect>
       </property>
       <attribute name="label">
@@ -79,12 +82,11 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:11pt; font-weight:600; color:#000000;&quot;&gt;Lorem ipsum &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ut metus nec ante vestibulum pretium nec et quam. Nam mollis a lacus non suscipit. Vivamus ac tempus est, vel lobortis nibh. Suspendisse potenti. Cras lectus sem, pharetra eu purus non, adipiscing adipiscing quam. Phasellus a sapien adipiscing ante malesuada suscipit quis ut odio. Donec at vestibulum purus. Maecenas quis risus pulvinar, tempus lectus sit amet, placerat felis. Aenean faucibus sem ut nulla vestibulum facilisis. Aenean mi nunc, elementum eget congue vitae, adipiscing eget mauris. Curabitur non condimentum mi. Quisque a dui eleifend, mattis est sed, tincidunt leo. Duis non arcu eu tellus ultricies euismod sed vitae quam.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Nullam enim augue, sodales a urna eu, iaculis ultrices massa. Nulla iaculis quis nisi id eleifend. Donec ornare odio vel dolor tempor aliquam. Donec tincidunt nibh in porta tempor. In hac habitasse platea dictumst. Praesent suscipit erat sed sollicitudin vestibulum. Suspendisse potenti. Nullam bibendum eros sem, non rutrum mauris ultricies ut.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Curabitur vel porttitor turpis, et volutpat neque. Sed et sem dictum, euismod lectus nec, iaculis metus. Duis vestibulum egestas velit, sit amet porttitor neque vehicula at. Ut pharetra porta sem a pharetra. Phasellus congue mauris nec lectus lobortis aliquam. Curabitur augue lacus, porta at imperdiet ac, lobortis non tellus. Donec rutrum dui ac tellus posuere, ac aliquam magna sollicitudin. Praesent porta ligula at turpis aliquet, sed sagittis enim suscipit. Fusce ultrices iaculis libero, id tempor est laoreet sed. Nulla elit justo, rhoncus at tempus et, vehicula sed purus. Vivamus aliquet imperdiet blandit. Suspendisse neque sapien, volutpat eu ipsum tempor, varius fringilla elit. Quisque gravida nibh et erat pellentesque, ut commodo lectus posuere.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Sed semper convallis gravida. In hac habitasse platea dictumst. Nam eget vehicula urna. Suspendisse rhoncus lobortis mauris, non volutpat nibh volutpat id. Morbi ut rhoncus felis. Sed feugiat vitae augue non mattis. Donec a blandit neque, vel sodales orci. Duis quis nibh gravida, convallis magna a, scelerisque justo.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Ut sodales diam a neque molestie rhoncus. Suspendisse potenti. Curabitur dictum nisl sed tortor tempor, eu vehicula nisl volutpat. Nam sem turpis, lacinia nec ornare at, adipiscing at magna. Aliquam eu ullamcorper risus. Praesent tempor ligula at sollicitudin consectetur. Nulla facilisi. Suspendisse non viverra urna. Duis sit amet tristique leo. Mauris iaculis interdum mattis. Aliquam erat volutpat. Etiam malesuada nulla ipsum, in gravida leo iaculis sed. Donec hendrerit tempor congue.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Sebelum menjalankan plugin, tambahkanlah data yang memuat garis pangkal masing-masing daerah yang akan dicari garis batasnya. Data garis pangkal masing-masing daerah disimpan dalam dua layer yang berbeda.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Penambahan layer pada QGIS dapat dilakukan melalui menu Layer &amp;gt; Add Vector Layer. Klik tombol Browse pada kotak dialog yang muncul, lalu arahkan ke direktori tempat data anda tersimpan. Setelah layer yang akan dimasukkan terpilih, klik tombol Open untuk menambahkan layer tersebut ke Map Canvas.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Setelah masing-masing layer termuat ke dalam Map Canvas, Klik icon plugin EqDistant untuk memulai. Layer yang termuat pada Map Canvas akan tampil pada dropdown Layer Masukan. Pilih masing-masing layer sebagai Layer Masukan A dan Layer Masukan B.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -96,7 +98,7 @@ p, li { white-space: pre-wrap; }
         <x>0</x>
         <y>0</y>
         <width>435</width>
-        <height>310</height>
+        <height>198</height>
        </rect>
       </property>
       <attribute name="label">
@@ -113,20 +115,25 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:11pt; font-weight:600; color:#000000;&quot;&gt;Lorem ipsum &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ut metus nec ante vestibulum pretium nec et quam. Nam mollis a lacus non suscipit. Vivamus ac tempus est, vel lobortis nibh. Suspendisse potenti. Cras lectus sem, pharetra eu purus non, adipiscing adipiscing quam. Phasellus a sapien adipiscing ante malesuada suscipit quis ut odio. Donec at vestibulum purus. Maecenas quis risus pulvinar, tempus lectus sit amet, placerat felis. Aenean faucibus sem ut nulla vestibulum facilisis. Aenean mi nunc, elementum eget congue vitae, adipiscing eget mauris. Curabitur non condimentum mi. Quisque a dui eleifend, mattis est sed, tincidunt leo. Duis non arcu eu tellus ultricies euismod sed vitae quam.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Nullam enim augue, sodales a urna eu, iaculis ultrices massa. Nulla iaculis quis nisi id eleifend. Donec ornare odio vel dolor tempor aliquam. Donec tincidunt nibh in porta tempor. In hac habitasse platea dictumst. Praesent suscipit erat sed sollicitudin vestibulum. Suspendisse potenti. Nullam bibendum eros sem, non rutrum mauris ultricies ut.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Curabitur vel porttitor turpis, et volutpat neque. Sed et sem dictum, euismod lectus nec, iaculis metus. Duis vestibulum egestas velit, sit amet porttitor neque vehicula at. Ut pharetra porta sem a pharetra. Phasellus congue mauris nec lectus lobortis aliquam. Curabitur augue lacus, porta at imperdiet ac, lobortis non tellus. Donec rutrum dui ac tellus posuere, ac aliquam magna sollicitudin. Praesent porta ligula at turpis aliquet, sed sagittis enim suscipit. Fusce ultrices iaculis libero, id tempor est laoreet sed. Nulla elit justo, rhoncus at tempus et, vehicula sed purus. Vivamus aliquet imperdiet blandit. Suspendisse neque sapien, volutpat eu ipsum tempor, varius fringilla elit. Quisque gravida nibh et erat pellentesque, ut commodo lectus posuere.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Sed semper convallis gravida. In hac habitasse platea dictumst. Nam eget vehicula urna. Suspendisse rhoncus lobortis mauris, non volutpat nibh volutpat id. Morbi ut rhoncus felis. Sed feugiat vitae augue non mattis. Donec a blandit neque, vel sodales orci. Duis quis nibh gravida, convallis magna a, scelerisque justo.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Ut sodales diam a neque molestie rhoncus. Suspendisse potenti. Curabitur dictum nisl sed tortor tempor, eu vehicula nisl volutpat. Nam sem turpis, lacinia nec ornare at, adipiscing at magna. Aliquam eu ullamcorper risus. Praesent tempor ligula at sollicitudin consectetur. Nulla facilisi. Suspendisse non viverra urna. Duis sit amet tristique leo. Mauris iaculis interdum mattis. Aliquam erat volutpat. Etiam malesuada nulla ipsum, in gravida leo iaculis sed. Donec hendrerit tempor congue.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Setelah layer terpilih untuk masing-masing Layer Masukan, maka opsi penentuan titik awal dan akhir akan aktif.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Pada kasus daerah yang berhadapan, dibutuhkan koordinat titik awal dan titik akhir segment garis batas untuk masing-masing layer. Untuk menentukan koordinat titik awal,klik tombol Titik Awal A kemudian klik titik pada posisi dimulainya penentuan garis batas. Jika langkah ini berhasil, akan muncul koordinat titik pada kotak koordinat disebelah kanan tombol input. Cara yang sama juga dilakukan dalam penentuan titik akhir segment, begitu juga untuk penentuan titik pada Layer Masukan B.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Pada kasus daerah yang bersebelahan, hanya dibutuhkan input koordinat titik awal untuk masing-masing layer masukan. koordinat titik akhir diperoleh dari perpotongan segment garis pangkal.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>435</width>
+        <height>198</height>
+       </rect>
+      </property>
       <attribute name="label">
-       <string>3. Jarak Klaim, dan Interval</string>
+       <string>3. Interval dan Jarak Klaim</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
@@ -139,18 +146,23 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:11pt; font-weight:600; color:#000000;&quot;&gt;Lorem ipsum &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ut metus nec ante vestibulum pretium nec et quam. Nam mollis a lacus non suscipit. Vivamus ac tempus est, vel lobortis nibh. Suspendisse potenti. Cras lectus sem, pharetra eu purus non, adipiscing adipiscing quam. Phasellus a sapien adipiscing ante malesuada suscipit quis ut odio. Donec at vestibulum purus. Maecenas quis risus pulvinar, tempus lectus sit amet, placerat felis. Aenean faucibus sem ut nulla vestibulum facilisis. Aenean mi nunc, elementum eget congue vitae, adipiscing eget mauris. Curabitur non condimentum mi. Quisque a dui eleifend, mattis est sed, tincidunt leo. Duis non arcu eu tellus ultricies euismod sed vitae quam.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Nullam enim augue, sodales a urna eu, iaculis ultrices massa. Nulla iaculis quis nisi id eleifend. Donec ornare odio vel dolor tempor aliquam. Donec tincidunt nibh in porta tempor. In hac habitasse platea dictumst. Praesent suscipit erat sed sollicitudin vestibulum. Suspendisse potenti. Nullam bibendum eros sem, non rutrum mauris ultricies ut.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Curabitur vel porttitor turpis, et volutpat neque. Sed et sem dictum, euismod lectus nec, iaculis metus. Duis vestibulum egestas velit, sit amet porttitor neque vehicula at. Ut pharetra porta sem a pharetra. Phasellus congue mauris nec lectus lobortis aliquam. Curabitur augue lacus, porta at imperdiet ac, lobortis non tellus. Donec rutrum dui ac tellus posuere, ac aliquam magna sollicitudin. Praesent porta ligula at turpis aliquet, sed sagittis enim suscipit. Fusce ultrices iaculis libero, id tempor est laoreet sed. Nulla elit justo, rhoncus at tempus et, vehicula sed purus. Vivamus aliquet imperdiet blandit. Suspendisse neque sapien, volutpat eu ipsum tempor, varius fringilla elit. Quisque gravida nibh et erat pellentesque, ut commodo lectus posuere.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Sed semper convallis gravida. In hac habitasse platea dictumst. Nam eget vehicula urna. Suspendisse rhoncus lobortis mauris, non volutpat nibh volutpat id. Morbi ut rhoncus felis. Sed feugiat vitae augue non mattis. Donec a blandit neque, vel sodales orci. Duis quis nibh gravida, convallis magna a, scelerisque justo.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Ut sodales diam a neque molestie rhoncus. Suspendisse potenti. Curabitur dictum nisl sed tortor tempor, eu vehicula nisl volutpat. Nam sem turpis, lacinia nec ornare at, adipiscing at magna. Aliquam eu ullamcorper risus. Praesent tempor ligula at sollicitudin consectetur. Nulla facilisi. Suspendisse non viverra urna. Duis sit amet tristique leo. Mauris iaculis interdum mattis. Aliquam erat volutpat. Etiam malesuada nulla ipsum, in gravida leo iaculis sed. Donec hendrerit tempor congue.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Setelah koordinat titik awal maupun titik akhir diperoleh, tentukan besaran interval pencarian titik pada kotak masukan Interval. Besaran &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;interval&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; dimasukkan dalam unit &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;meter&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Perlu diperhatikan bahwa semakin kecil interval yang diberikan akan berdampak pada semakin rapat titik yang dihasilkan serta semakin lama proses pencarian. Besaran yang direkomendasikan adalah antara 10 - 100 m.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Pada kasus daerah yang bersebelahan, diperlukan pula besaran Jarak Klaim batas, yang dihitung dari titik akhir segment, yaitu perpotongan antara segment utama kedua garis pangkal masing-masing daerah. Besaran &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;jarak klaim&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; batas menggunakan satuan &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;mil laut&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>435</width>
+        <height>198</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>4. Menyimpan Hasil</string>
       </attribute>
@@ -165,12 +177,28 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:11pt; font-weight:600; color:#000000;&quot;&gt;Lorem ipsum &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ut metus nec ante vestibulum pretium nec et quam. Nam mollis a lacus non suscipit. Vivamus ac tempus est, vel lobortis nibh. Suspendisse potenti. Cras lectus sem, pharetra eu purus non, adipiscing adipiscing quam. Phasellus a sapien adipiscing ante malesuada suscipit quis ut odio. Donec at vestibulum purus. Maecenas quis risus pulvinar, tempus lectus sit amet, placerat felis. Aenean faucibus sem ut nulla vestibulum facilisis. Aenean mi nunc, elementum eget congue vitae, adipiscing eget mauris. Curabitur non condimentum mi. Quisque a dui eleifend, mattis est sed, tincidunt leo. Duis non arcu eu tellus ultricies euismod sed vitae quam.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Nullam enim augue, sodales a urna eu, iaculis ultrices massa. Nulla iaculis quis nisi id eleifend. Donec ornare odio vel dolor tempor aliquam. Donec tincidunt nibh in porta tempor. In hac habitasse platea dictumst. Praesent suscipit erat sed sollicitudin vestibulum. Suspendisse potenti. Nullam bibendum eros sem, non rutrum mauris ultricies ut.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Curabitur vel porttitor turpis, et volutpat neque. Sed et sem dictum, euismod lectus nec, iaculis metus. Duis vestibulum egestas velit, sit amet porttitor neque vehicula at. Ut pharetra porta sem a pharetra. Phasellus congue mauris nec lectus lobortis aliquam. Curabitur augue lacus, porta at imperdiet ac, lobortis non tellus. Donec rutrum dui ac tellus posuere, ac aliquam magna sollicitudin. Praesent porta ligula at turpis aliquet, sed sagittis enim suscipit. Fusce ultrices iaculis libero, id tempor est laoreet sed. Nulla elit justo, rhoncus at tempus et, vehicula sed purus. Vivamus aliquet imperdiet blandit. Suspendisse neque sapien, volutpat eu ipsum tempor, varius fringilla elit. Quisque gravida nibh et erat pellentesque, ut commodo lectus posuere.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Sed semper convallis gravida. In hac habitasse platea dictumst. Nam eget vehicula urna. Suspendisse rhoncus lobortis mauris, non volutpat nibh volutpat id. Morbi ut rhoncus felis. Sed feugiat vitae augue non mattis. Donec a blandit neque, vel sodales orci. Duis quis nibh gravida, convallis magna a, scelerisque justo.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Ut sodales diam a neque molestie rhoncus. Suspendisse potenti. Curabitur dictum nisl sed tortor tempor, eu vehicula nisl volutpat. Nam sem turpis, lacinia nec ornare at, adipiscing at magna. Aliquam eu ullamcorper risus. Praesent tempor ligula at sollicitudin consectetur. Nulla facilisi. Suspendisse non viverra urna. Duis sit amet tristique leo. Mauris iaculis interdum mattis. Aliquam erat volutpat. Etiam malesuada nulla ipsum, in gravida leo iaculis sed. Donec hendrerit tempor congue.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Secara &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; font-style:italic; color:#000000;&quot;&gt;default &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;hasil yang akan ditampilkan dalam map canvas adalah berupa layer garis batas antara kedua daerah yang menjadi &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; font-style:italic; color:#000000;&quot;&gt;input &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;/ masukan.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Anda juga dapat menambahkan hasil titik ekuidistant yang merupakan titik-titik yang membentuk segment garis batas, serta garis kontrol yang menunjukkan titik mana pada garis pangkal yang digunakan dalam pembentukan segment garis batas.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:14px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt;Setiap hasil yang ditampilkan pada MapCanvas tersimpan sebagai memory layer yang akan otomatis hilang ketika QGIS ditutup. Oleh karena itu, jika hasil yang didapatkan telah sesuai maka layer hasil tersebut dapat disimpan dengan cara klik kanan pada layer tersebut kemudian klik &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; font-style:italic; color:#000000;&quot;&gt;Save As ...&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:8pt; color:#000000;&quot;&gt; .&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_5">
+      <attribute name="label">
+       <string>Informasi Lebih Lanjut</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QTextBrowser" name="textBrowser_5">
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Plugin EqDistant ini masih dalam tahap pengembangan, dan masih terdapat beberapa kekurangan yang perlu disempurnakan. Untuk informasi lebih lanjut kunjungi:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;ivanbusthomi.github.io&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;ivanbusthomi.github.io&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>

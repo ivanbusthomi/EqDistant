@@ -19,14 +19,14 @@
      <item row="0" column="0">
       <widget class="QLabel" name="labelB_2">
        <property name="text">
-        <string>Input Layer A</string>
+        <string>Layer Masukan A</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="labelB">
        <property name="text">
-        <string>Input Layer B</string>
+        <string>Layer Masukan B</string>
        </property>
       </widget>
      </item>
@@ -53,7 +53,7 @@
       <number>0</number>
      </property>
      <property name="documentMode">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
@@ -63,7 +63,7 @@
      </property>
      <widget class="QWidget" name="opposite">
       <attribute name="title">
-       <string>Opposite State</string>
+       <string>Daerah Berhadapan</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0" colspan="2">
@@ -102,7 +102,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>Start A</string>
+                  <string>Titik Awal A</string>
                  </property>
                 </widget>
                </item>
@@ -129,7 +129,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>End A</string>
+                  <string>Titik Akhir A</string>
                  </property>
                 </widget>
                </item>
@@ -168,7 +168,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>Start B</string>
+                  <string>Titik Awal B</string>
                  </property>
                 </widget>
                </item>
@@ -195,7 +195,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>End B</string>
+                  <string>Titik Akhir B</string>
                  </property>
                 </widget>
                </item>
@@ -272,7 +272,7 @@
           <item row="0" column="2">
            <widget class="QPushButton" name="opp_btnRun">
             <property name="text">
-             <string>Run</string>
+             <string>Jalankan!</string>
             </property>
            </widget>
           </item>
@@ -283,7 +283,7 @@
      </widget>
      <widget class="QWidget" name="adjacent">
       <attribute name="title">
-       <string>Adjacent State</string>
+       <string>Daerah Bersebelahan</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_11">
        <item row="0" column="0" colspan="2">
@@ -315,7 +315,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>Start A</string>
+                  <string>Titik Awal A</string>
                  </property>
                 </widget>
                </item>
@@ -361,7 +361,7 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>Start B</string>
+                  <string>Titik Awal B</string>
                  </property>
                 </widget>
                </item>
@@ -401,7 +401,7 @@
           <item row="0" column="1">
            <widget class="QLabel" name="labelB_3">
             <property name="text">
-             <string>Claim Distance</string>
+             <string>Jarak Klaim</string>
             </property>
            </widget>
           </item>
@@ -414,7 +414,7 @@
              </sizepolicy>
             </property>
             <property name="placeholderText">
-             <string>Nautical mile unit</string>
+             <string>dalam Mil laut</string>
             </property>
            </widget>
           </item>
@@ -458,7 +458,7 @@
           <item row="0" column="4">
            <widget class="QPushButton" name="adj_btnRun">
             <property name="text">
-             <string>Run</string>
+             <string>Jalankan!</string>
             </property>
            </widget>
           </item>
@@ -469,14 +469,14 @@
      </widget>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="14" column="0">
     <widget class="QLabel" name="labStatus">
      <property name="text">
       <string>Status</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1" colspan="4">
+   <item row="14" column="1" colspan="4">
     <widget class="QTextBrowser" name="textBrowser">
      <property name="maximumSize">
       <size>
@@ -486,14 +486,14 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="0" colspan="5">
+   <item row="15" column="0" colspan="5">
     <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="16" column="4">
+   <item row="17" column="4">
     <widget class="QPushButton" name="btnClose">
      <property name="maximumSize">
       <size>
@@ -502,11 +502,11 @@
       </size>
      </property>
      <property name="text">
-      <string>Close</string>
+      <string>Tutup</string>
      </property>
     </widget>
    </item>
-   <item row="15" column="0" rowspan="2" colspan="2">
+   <item row="16" column="0" rowspan="2" colspan="2">
     <widget class="QPushButton" name="btnHelp">
      <property name="maximumSize">
       <size>
@@ -515,11 +515,11 @@
       </size>
      </property>
      <property name="text">
-      <string>Help</string>
+      <string>Bantuan</string>
      </property>
     </widget>
    </item>
-   <item row="15" column="2" rowspan="2" colspan="2">
+   <item row="16" column="2" rowspan="2" colspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -539,28 +539,28 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="label_7">
      <property name="text">
-      <string>Output</string>
+      <string>Hasil</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="6" column="1">
     <widget class="QCheckBox" name="checkBox_eLine">
      <property name="text">
-      <string>Equidistant Point</string>
+      <string>Titik Ekuidistant</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="7" column="1">
     <widget class="QCheckBox" name="checkBox_cLine">
      <property name="text">
-      <string>Control Line</string>
+      <string>Garis Kontrol</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="5">
+   <item row="8" column="0" colspan="5">
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
