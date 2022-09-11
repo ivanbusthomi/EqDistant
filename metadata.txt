@@ -1,36 +1,45 @@
-# This file contains metadata for your plugin. Since 
-# version 2.0 of QGIS this is the proper way to supply 
-# information about a plugin. The old method of 
-# embedding metadata in __init__.py will 
-# is no longer supported since version 2.0.
+# This file contains metadata for your plugin.
 
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=EqDistant Plugin
-qgisMinimumVersion=2.0
-description=This plugin creates equidistant line
-version=0.1
+name=EqDistant
+qgisMinimumVersion=3.0
+description=Creates median line using Equidistant line principle.
+version=3.0
 author=Ivan Busthomi
 email=ivanbusthomi@gmail.com
-
+about=Creates median line between two coast line features using Equidistant line principle. The result contains median line from the algorithm as well as the construction line and turning point for each point in the median line. This plugin is usefull in maritime boundary delineation and delimitiation
+tracker=https://github.com/ivanbusthomi/EqDistant/issues
+repository=https://github.com/ivanbusthomi/EqDistant
 # End of mandatory metadata
-
-# Optional items:
-
+# Recommended items:
+hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog=Version 3.0
+    - Code migration to QGIS3
+    - Algorithm changed to using GIS methods to create median line
+    - enable saving to temporary files
 
 # Tags are comma separated with spaces allowed
-tags=Equidistant, Maritime, Boundary, Delimitation
+tags=python, equidistant, median line, maritime, boundary, UNCLOS, TALOS
 
 homepage=http://ivanbusthomi.github.io/plugins/eqdistant/
-tracker=
-repository=https://github.com/ivanbusthomi/EqDistant
+category=Plugins
 icon=icon.png
 # experimental flag
-experimental=False
+experimental=True
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
 
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
