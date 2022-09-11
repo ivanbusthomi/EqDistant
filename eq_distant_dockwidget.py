@@ -33,13 +33,14 @@ from qgis.utils import iface
 from qgis.gui import QgsMessageBar
 import time, processing
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'eq_distant_dockwidget_base.ui'))
+FORM_CLASS, _ = uic.loadUiType(
+    os.path.join(os.path.dirname(__file__), "eq_distant_dockwidget_base.ui")
+)
 
 
 class EqDistantDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
-    """DockWidget UI Implementation
-    """
+    """DockWidget UI Implementation"""
+
     closingPlugin = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -57,7 +58,6 @@ class EqDistantDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.outputGroup.setEnabled(False)
 
     def closeEvent(self, event):
-        """Close Event.
-        """
+        """Close Event."""
         self.closingPlugin.emit()
         event.accept()

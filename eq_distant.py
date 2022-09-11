@@ -26,6 +26,7 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QPushButton, QFileDialog
 from qgis.core import QgsMapLayerProxyModel, QgsMapLayerType, Qgis, QgsProject
 from qgis.core import QgsVectorFileWriter, QgsVectorLayer
+from qgis.gui import QgsRubberBand
 from osgeo import ogr
 
 # Initialize Qt resources from file resources.py
@@ -38,6 +39,7 @@ import os.path
 import logging
 
 from .mymaptool import PointTool
+
 
 class EqDistant:
     """QGIS Plugin Implementation."""
@@ -57,11 +59,10 @@ class EqDistant:
         self.plugin_dir = os.path.dirname(__file__)
 
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        locale = QSettings().value("locale/userLocale")[0:2]
         locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'EqDistant_{}.qm'.format(locale))
+            self.plugin_dir, "i18n", "EqDistant_{}.qm".format(locale)
+        )
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -70,37 +71,40 @@ class EqDistant:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&EqDistant')
-        self.toolbar = self.iface.addToolBar(u'EqDistant')
-        self.toolbar.setObjectName(u'EqDistant')
+        self.menu = self.tr("&EqDistant")
+        self.toolbar = self.iface.addToolBar("EqDistant")
+        self.toolbar.setObjectName("EqDistant")
 
-        #print "** INITIALIZING EqDistant"
+        # print "** INITIALIZING EqDistant"
 
         self.processing_flag = False
 
         self.list_valid_layers = []
         self.list_invalid_layers = []
-        self.input_layer_a = ''
-        self.input_layer_b = ''
-        self.list_feature_a = ''
-        self.list_feature_b = ''
-        self.crs = ''
-        self.input_mode = ''
-        self.save_location = ''
+        self.input_layer_a = ""
+        self.input_layer_b = ""
+        self.list_feature_a = ""
+        self.list_feature_b = ""
+        self.crs = ""
+        self.input_mode = ""
+        self.save_location = ""
 
-        self.dt_layer = ''
-        self.valid_dt = ''
-        self.merged_pt_layer = ''
-        self.p_layer_a = ''
-        self.p_layer_b = ''
+        self.dt_layer = ""
+        self.valid_dt = ""
+        self.merged_pt_layer = ""
+        self.p_layer_a = ""
+        self.p_layer_b = ""
 
-        self.msg_widget = ''
+        self.rb_layer_a = ""
+        self.rb_layer_b = ""
+
+        self.msg_widget = ""
 
         self.process_flag = False
         self.pluginIsActive = False
         self.dockwidget = None
 
-        self.intermediary_group = ''
+        self.intermediary_group = ""
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -115,20 +119,20 @@ class EqDistant:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('EqDistant', message)
-
+        return QCoreApplication.translate("EqDistant", message)
 
     def add_action(
-                self,
-                icon_path,
-                text,
-                callback,
-                enabled_flag=True,
-                add_to_menu=True,
-                add_to_toolbar=True,
-                status_tip=None,
-                whats_this=None,
-                parent=None):
+        self,
+        icon_path,
+        text,
+        callback,
+        enabled_flag=True,
+        add_to_menu=True,
+        add_to_toolbar=True,
+        status_tip=None,
+        whats_this=None,
+        parent=None,
+    ):
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -183,31 +187,29 @@ class EqDistant:
             self.toolbar.addAction(action)
 
         if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
+            self.iface.addPluginToMenu(self.menu, action)
 
         self.actions.append(action)
 
         return action
 
-
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/EqDistant/icon.png'
+        icon_path = ":/plugins/EqDistant/icon.png"
         self.add_action(
             icon_path,
-            text=self.tr(u'EqDistant Plugin'),
+            text=self.tr("EqDistant Plugin"),
             callback=self.run,
-            parent=self.iface.mainWindow())
+            parent=self.iface.mainWindow(),
+        )
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
 
-        #print "** CLOSING EqDistant"
+        # print "** CLOSING EqDistant"
 
         # disconnects
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
@@ -223,21 +225,18 @@ class EqDistant:
 
         self.pluginIsActive = False
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
-        #print "** UNLOAD EqDistant"
+        # print "** UNLOAD EqDistant"
 
         for action in self.actions:
-            self.iface.removePluginMenu(
-                self.tr(u'&EqDistant'),
-                action)
+            self.iface.removePluginMenu(self.tr("&EqDistant"), action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def run(self):
         """Run method that loads and starts the plugin"""
@@ -245,7 +244,7 @@ class EqDistant:
         if not self.pluginIsActive:
             self.pluginIsActive = True
 
-            #print "** STARTING EqDistant"
+            # print "** STARTING EqDistant"
 
             # dockwidget may not exist if:
             #    first run of plugin
@@ -257,17 +256,17 @@ class EqDistant:
                 self.layer_input()
 
                 self.dockwidget.btn_browse_dir.pressed.connect(
-                    self.browse_save_location)
+                    self.browse_save_location
+                )
                 self.dockwidget.mcb_input_a.currentIndexChanged.connect(
-                    self.layer_input)
+                    self.layer_input
+                )
                 self.dockwidget.mcb_input_b.currentIndexChanged.connect(
-                    self.layer_input)
-                self.iface.mapCanvas().layersChanged.connect(
-                    self.valid_layer_check)
-                self.dockwidget.folder_path.textChanged.connect(
-                    self.folder_validation)
-                self.dockwidget.btn_preprocess.pressed.connect(
-                    self.preprocess_input)
+                    self.layer_input
+                )
+                self.iface.mapCanvas().layersChanged.connect(self.valid_layer_check)
+                self.dockwidget.folder_path.textChanged.connect(self.folder_validation)
+                self.dockwidget.btn_preprocess.pressed.connect(self.preprocess_input)
                 self.dockwidget.btn_process.pressed.connect(self.process)
 
                 self.dockwidget.pushButton.pressed.connect(self.customMapTool)
@@ -279,47 +278,35 @@ class EqDistant:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
-
     def browse_save_location(self):
-        """Find location where to save the result.
-        """
+        """Find location where to save the result."""
         # home = os.path.expanduser("~")
         self.save_location = QFileDialog.getSaveFileName(
-            None,
-            "Save Result As",
-            "EqDistant Result",
-            "GeoPackage (*.gpkg)")[0]
+            None, "Save Result As", "EqDistant Result", "GeoPackage (*.gpkg)"
+        )[0]
         self.dockwidget.folder_path.setText(self.save_location)
 
-
     def folder_validation(self):
-        """Validate save loaction and enable process button.
-        """
+        """Validate save loaction and enable process button."""
         folder_location = self.dockwidget.folder_path.text()
         if os.path.exists(os.path.dirname(folder_location)):
             self.dockwidget.btn_process.setEnabled(True)
         else:
             self.dockwidget.btn_process.setEnabled(False)
 
-
     def layer_input(self):
-        """Define layer input.
-        """
+        """Define layer input."""
         self.input_layer_a = self.dockwidget.mcb_input_a.currentLayer()
         self.input_layer_b = self.dockwidget.mcb_input_b.currentLayer()
         try:
-            self.input_layer_a.selectionChanged.connect(
-                self.feature_selection_a)
-            self.input_layer_b.selectionChanged.connect(
-                self.feature_selection_b)
+            self.input_layer_a.selectionChanged.connect(self.feature_selection_a)
+            self.input_layer_b.selectionChanged.connect(self.feature_selection_b)
             self.check_layer_input()
         except AttributeError:
             pass
 
-
     def feature_selection_a(self):
-        """Feature selection slot.
-        """
+        """Feature selection slot."""
         try:
             if self.input_layer_a.selectedFeatureCount() > 0:
                 self.dockwidget.selected_input_a.setEnabled(True)
@@ -329,10 +316,8 @@ class EqDistant:
         except AttributeError:
             pass
 
-
     def feature_selection_b(self):
-        """Feature selection slot.
-        """
+        """Feature selection slot."""
         try:
             if self.input_layer_b.selectedFeatureCount() > 0:
                 self.dockwidget.selected_input_b.setEnabled(True)
@@ -342,10 +327,8 @@ class EqDistant:
         except AttributeError:
             pass
 
-
     def check_layer_input(self):
-        """Check whether input validity.
-        """
+        """Check whether input validity."""
         self.feature_selection_a()
         self.feature_selection_b()
         # enable pre process button if input layers are different
@@ -363,10 +346,8 @@ class EqDistant:
         else:
             self.dockwidget.interpolate_input_b.setEnabled(True)
 
-
     def valid_layer_check(self):
-        """Filter invalid layer and notify user.
-        """
+        """Filter invalid layer and notify user."""
         self.list_valid_layers = []
         for layer in self.iface.mapCanvas().layers():
             if layer.type() == QgsMapLayerType.VectorLayer:
@@ -374,20 +355,21 @@ class EqDistant:
                     self.list_valid_layers.append(layer)
 
         self.list_invalid_layers = [
-            layer for layer in self.iface.mapCanvas().layers() \
-                if layer not in self.list_valid_layers]
+            layer
+            for layer in self.iface.mapCanvas().layers()
+            if layer not in self.list_valid_layers
+        ]
 
-        self.dockwidget.mcb_input_a.setExceptedLayerList(
-            self.list_invalid_layers)
-        self.dockwidget.mcb_input_b.setExceptedLayerList(
-            self.list_invalid_layers)
+        self.dockwidget.mcb_input_a.setExceptedLayerList(self.list_invalid_layers)
+        self.dockwidget.mcb_input_b.setExceptedLayerList(self.list_invalid_layers)
         if len(self.list_valid_layers) < 2:
             self.iface.messageBar().pushMessage(
                 "Warning:",
                 "Not enough input layers detected. \
                     Please add more input layer(s).",
                 Qgis.Warning,
-                duration=3)
+                duration=3,
+            )
             return
         # self.iface.messageBar().pushMessage(
         #     "Info:", "Input layer successfully loaded.",
@@ -398,22 +380,20 @@ class EqDistant:
         except IndexError:
             self.dockwidget.mcb_input_b.setLayer(self.list_valid_layers[0])
 
-
     def preprocess_input(self):
-        """Preprocess input before generating the median line.
-        """
+        """Preprocess input before generating the median line."""
         if self.dockwidget.selected_input_a.isChecked():
             self.list_feature_a = [
-                feat for feat in self.input_layer_a.selectedFeatures()]
+                feat for feat in self.input_layer_a.selectedFeatures()
+            ]
         else:
-            self.list_feature_a = [
-                feat for feat in self.input_layer_a.getFeatures()]
+            self.list_feature_a = [feat for feat in self.input_layer_a.getFeatures()]
         if self.dockwidget.selected_input_b.isChecked():
             self.list_feature_b = [
-                feat for feat in self.input_layer_b.selectedFeatures()]
+                feat for feat in self.input_layer_b.selectedFeatures()
+            ]
         else:
-            self.list_feature_b = [
-                feat for feat in self.input_layer_b.getFeatures()]
+            self.list_feature_b = [feat for feat in self.input_layer_b.getFeatures()]
         # check input CRS
         crs_a = self.input_layer_a.crs().authid()
         crs_b = self.input_layer_b.crs().authid()
@@ -424,7 +404,7 @@ class EqDistant:
                 "Warning:",
                 "Input files should be in the same coordinate system.",
                 Qgis.Critical,
-                duration=3
+                duration=3,
             )
             self.process_flag = False
         # check feature intersection to determine boundary mode
@@ -441,21 +421,21 @@ class EqDistant:
         if self.dockwidget.interpolate_input_a.isChecked():
             unit_a = self.dockwidget.interpolate_unit_a.currentIndex()
             if unit_a == 0:
-                interpolate_interval_a = int(
-                    self.dockwidget.interpolate_value_a.text())
+                interpolate_interval_a = int(self.dockwidget.interpolate_value_a.text())
             elif unit_a == 1:
-                interpolate_interval_a = int(
-                    self.dockwidget.interpolate_value_a.text())*1852
+                interpolate_interval_a = (
+                    int(self.dockwidget.interpolate_value_a.text()) * 1852
+                )
         else:
             interpolate_interval_a = 0
         if self.dockwidget.interpolate_input_b.isChecked():
             unit_b = self.dockwidget.interpolate_unit_b.currentIndex()
             if unit_b == 0:
-                interpolate_interval_b = int(
-                    self.dockwidget.interpolate_value_b.text())
+                interpolate_interval_b = int(self.dockwidget.interpolate_value_b.text())
             elif unit_b == 1:
-                interpolate_interval_b = int(
-                    self.dockwidget.interpolate_value_b.text())*1852
+                interpolate_interval_b = (
+                    int(self.dockwidget.interpolate_value_b.text()) * 1852
+                )
         else:
             interpolate_interval_b = 0
         # create point layer as preprocessed input
@@ -465,7 +445,7 @@ class EqDistant:
             f"Point Layer {self.input_layer_a.name()}",
             id_name="point_id",
             id_prefix="A",
-            interpolate_interval=interpolate_interval_a
+            interpolate_interval=interpolate_interval_a,
         )
         self.p_layer_b = line_to_point_layer_new(
             self.list_feature_b,
@@ -473,20 +453,17 @@ class EqDistant:
             f"Point Layer {self.input_layer_b.name()}",
             id_name="point_id",
             id_prefix="B",
-            interpolate_interval=interpolate_interval_b
+            interpolate_interval=interpolate_interval_b,
         )
         # merge point layer
-        self.merged_pt_layer = merge_point_layers(
-            self.p_layer_a, self.p_layer_b)
+        self.merged_pt_layer = merge_point_layers(self.p_layer_a, self.p_layer_b)
         # create voronoi diagaram and delaunay triangulation layer
         # vd_layer = create_voronoi(merged_pt_layer)
         self.dt_layer = create_delaunay_triangulation(self.merged_pt_layer)
         # valid delaunay triangulation area
         self.valid_dt = valid_delaunay_triangulation(
-            self.dt_layer,
-            self.list_feature_a,
-            self.list_feature_b
-            )
+            self.dt_layer, self.list_feature_a, self.list_feature_b
+        )
         self.msg_widget = self.push_message()
         self.iface.messageBar().pushWidget(self.msg_widget, Qgis.Info)
         self.processing_flag = True
@@ -498,10 +475,8 @@ class EqDistant:
         self.intermediary_group.addLayer(self.valid_dt)
         self.iface.setActiveLayer(self.valid_dt)
 
-
     def push_message(self):
-        """Custom message.
-        """
+        """Custom message."""
         msg_title = "Select Area"
         msg_text = "Select an area where median line is going to be generated."
         msg_widget = self.iface.messageBar().createMessage(msg_title, msg_text)
@@ -512,10 +487,8 @@ class EqDistant:
         msg_widget.layout().addWidget(msg_button)
         return msg_widget
 
-
     def valid_area_selection(self):
-        """Check if valid area is selected or not.
-        """
+        """Check if valid area is selected or not."""
         if self.processing_flag:
             if self.valid_dt.selectedFeatureCount() == 1:
                 self.dockwidget.btn_process.setEnabled(True)
@@ -523,13 +496,11 @@ class EqDistant:
                 try:
                     self.iface.messageBar().popWidget(self.msg_widget)
                     self.iface.messageBar().pushMessage(
-                        "Info:", "Area selection success.",
-                        Qgis.Success, duration=3
+                        "Info:", "Area selection success.", Qgis.Success, duration=3
                     )
                 except RuntimeError:
                     self.iface.messageBar().pushMessage(
-                        "Info:", "Area selection success.",
-                        Qgis.Success, duration=3
+                        "Info:", "Area selection success.", Qgis.Success, duration=3
                     )
             else:
                 self.dockwidget.btn_process.setEnabled(False)
@@ -537,31 +508,25 @@ class EqDistant:
                 self.msg_widget = self.push_message()
                 self.iface.messageBar().pushWidget(self.msg_widget, Qgis.Info)
 
-
     def process(self):
-        """Generate median line with preprocessed input.
-        """
+        """Generate median line with preprocessed input."""
         vd_layer = create_voronoi(self.merged_pt_layer)
 
         if self.input_mode == "opposite":
             median_layer = create_median_line_opposite(
-                vd_layer,
-                self.list_feature_a,
-                self.list_feature_b,
-                self.crs
+                vd_layer, self.list_feature_a, self.list_feature_b, self.crs
             )
         elif self.input_mode == "adjacent":
             median_layer = create_median_line_adjacent(
-                vd_layer,
-                self.list_feature_a,
-                self.list_feature_b,
-                self.crs
+                vd_layer, self.list_feature_a, self.list_feature_b, self.crs
             )
         # debug file
         input_layer_a_preprocessed = line_feature_list_to_layer(
-            self.list_feature_a, self.crs, "Input layer A")
+            self.list_feature_a, self.crs, "Input layer A"
+        )
         input_layer_b_preprocessed = line_feature_list_to_layer(
-            self.list_feature_b, self.crs, "Input layer B")
+            self.list_feature_b, self.crs, "Input layer B"
+        )
         # result layer
         list_result_layer = []
         if self.valid_dt.selectedFeatureCount() == 1:
@@ -576,7 +541,8 @@ class EqDistant:
                 if not self.dockwidget.check_equidistant_point.isChecked():
                     eq_pt_layer = create_equidistant_point(median_layer)
                 cl_layer = create_construction_line(
-                    vd_layer, eq_pt_layer, self.merged_pt_layer)
+                    vd_layer, eq_pt_layer, self.merged_pt_layer
+                )
                 list_result_layer.append(cl_layer)
             if self.dockwidget.check_median_line.isChecked():
                 median_layer.startEditing()
@@ -584,16 +550,24 @@ class EqDistant:
                 median_layer.deleteSelectedFeatures()
                 median_layer.commitChanges()
                 list_result_layer.append(median_layer)
+            if self.dockwidget.check_final_boundary.isChecked():
+                boundary_distance = int(self.dockwidget.buffer_value.text())
+                final_boundary_layer = generate_final_boundary(
+                    self.list_feature_a,
+                    self.list_feature_b,
+                    boundary_distance,
+                    median_layer, 
+                    self.crs,
+                    )
+                list_result_layer.append(final_boundary_layer)
             if self.dockwidget.check_debug_mode.isChecked():
                 group_name = "Debug Layer"
                 root = QgsProject.instance().layerTreeRoot()
                 debug_group = root.addGroup(group_name)
                 # add layer
-                QgsProject.instance().addMapLayer(
-                    input_layer_a_preprocessed, False)
+                QgsProject.instance().addMapLayer(input_layer_a_preprocessed, False)
                 debug_group.addLayer(input_layer_a_preprocessed)
-                QgsProject.instance().addMapLayer(
-                    input_layer_b_preprocessed, False)
+                QgsProject.instance().addMapLayer(input_layer_b_preprocessed, False)
                 debug_group.addLayer(input_layer_b_preprocessed)
                 QgsProject.instance().addMapLayer(vd_layer, False)
                 debug_group.addLayer(vd_layer)
@@ -608,7 +582,7 @@ class EqDistant:
                 "Warning:",
                 "Please ensure one valid area is selected.",
                 Qgis.Warning,
-                duration=3
+                duration=3,
             )
         if self.dockwidget.rb_saveToFolder.isChecked():
             # file_name = 'EqDistant Result.gpkg'
@@ -623,7 +597,8 @@ class EqDistant:
                     save_options.actionOnExistingFile = overwrite_layer
                 save_options.layerName = layer.name()
                 QgsVectorFileWriter.writeAsVectorFormat(
-                    layer, self.save_location, save_options)
+                    layer, self.save_location, save_options
+                )
             if self.dockwidget.check_load_result.isChecked():
                 result_connection = ogr.Open(self.save_location)
                 group_name = "Result Layer"
@@ -633,7 +608,7 @@ class EqDistant:
                     vlayer = QgsVectorLayer(
                         self.save_location + "|layername=" + layer.GetName(),
                         layer.GetName(),
-                        'ogr'
+                        "ogr",
                     )
                     QgsProject.instance().addMapLayer(vlayer, False)
                     result_group.addLayer(vlayer)
@@ -644,11 +619,14 @@ class EqDistant:
             for layer in list_result_layer:
                 QgsProject.instance().addMapLayer(layer, False)
                 result_group.addLayer(layer)
-
+        
+        # process cleanup
         self.intermediary_group.setItemVisibilityCheckedRecursive(False)
         self.processing_flag = False
+        self.valid_dt.selectionChanged.disconnect()
+
 
     def customMapTool(self):
-        print('pressed')
+        print("pressed")
         tool = PointTool(self.iface.mapCanvas())
         self.iface.mapCanvas().setMapTool(tool)
