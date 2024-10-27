@@ -24,14 +24,14 @@
 
 import os
 
-from qgis.PyQt import QtGui, QtWidgets, uic
+from qgis.PyQt import QtWidgets, uic, QtGui
 from qgis.PyQt.QtCore import pyqtSignal
 
-from qgis.PyQt.QtCore import QVariant, pyqtSlot
-from qgis.core import *
-from qgis.utils import iface
-from qgis.gui import QgsMessageBar
-import time, processing
+# from qgis.PyQt.QtCore import QVariant, pyqtSlot
+# from qgis.core import *
+# from qgis.utils import iface
+# from qgis.gui import QgsMessageBar
+# import time, processing
 
 FORM_CLASS, _ = uic.loadUiType(
     os.path.join(os.path.dirname(__file__), "eq_distant_dockwidget_base.ui")

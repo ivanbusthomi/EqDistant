@@ -11,17 +11,16 @@ ___
 
 ## Result Example
 * Equidistant Line
-  
+
   <img src="http://ivanbusthomi.github.io/plugins/eqdistant/img/res2.png" width="300"/>
 * Equidistant Line with construction line
-  
+
   <img src="http://ivanbusthomi.github.io/plugins/eqdistant/img/res3.png" width="300"/>
 * Equidistant Line with equidistance points
-  
-  <img src="http://ivanbusthomi.github.io/plugins/eqdistant/img/res4.png" width="300"/>  
-  
+
+  <img src="http://ivanbusthomi.github.io/plugins/eqdistant/img/res4.png" width="300"/>
+
 ___
 
 ## Tutorial
 Visit the tutorial on how to use the plugin in http://ivanbusthomi.github.io/plugins/eqdistant/
-

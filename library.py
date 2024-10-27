@@ -1,7 +1,16 @@
 from qgis.PyQt.QtCore import QVariant
-from qgis.gui import QgsRubberBand
-from qgis.core import *
-from qgis.utils import iface
+# from qgis.gui import QgsRubberBand
+from qgis.core import (
+    QgsFeature,
+    QgsGeometry,
+    QgsVectorLayer,
+    QgsField,
+    QgsSpatialIndex,
+    QgsFeatureRequest,
+    QgsExpression,
+    QgsPointXY
+)
+# from qgis.utils import iface
 
 
 def interpolate_line_segment(line_segment, interpolate_interval):
@@ -17,7 +26,7 @@ def interpolate_line_segment(line_segment, interpolate_interval):
 
 
 def interpolate_line(list_of_line_feature, interpolate_interval):
-    list_of_segment_geom = []
+    # list_of_segment_geom = []
     list_interpolate_point_feature = []
     # print(f"Processing {len(list_of_line_feature)} feature(s)")
     # print("Breaking into line segment")
@@ -49,8 +58,12 @@ def interpolate_line(list_of_line_feature, interpolate_interval):
             for index in range(len(line_coord) - 1):
                 first_point = line_coord[index]
                 second_point = line_coord[index + 1]
-                segment_geom = QgsGeometry.fromPolylineXY([first_point, second_point])
-                points = interpolate_line_segment(segment_geom, interpolate_interval)
+                segment_geom = QgsGeometry.fromPolylineXY(
+                    [first_point, second_point]
+                )
+                points = interpolate_line_segment(
+                    segment_geom, interpolate_interval
+                )
                 list_interpolate_point_feature += points
             last_point = QgsGeometry.fromPointXY(line_coord[-1])
             last_point_feat = QgsFeature()
@@ -92,8 +105,8 @@ def line_to_point_layer_new(
     point_layer.updateFields()
 
     # create line segment and interpolate
-    list_of_segment_geom = []
-    list_point_feature = []
+    # list_of_segment_geom = []
+    # list_point_feature = []
     point_id = 0
 
     list_geom = combine_geometries([feat.geometry() for feat in list_feat])
@@ -115,7 +128,9 @@ def line_to_point_layer_new(
                             segment_geom, interpolate_interval
                         )
                         for point_feat in point_feats:
-                            point_feat.setAttributes([id_prefix + str(point_id)])
+                            point_feat.setAttributes(
+                                [id_prefix + str(point_id)]
+                            )
                             point_id += 1
                             point_layer_pr.addFeature(point_feat)
                     else:
@@ -137,7 +152,9 @@ def line_to_point_layer_new(
                 first_point = line_coord[index]
                 if interpolate_interval > 0:
                     next_point = line_coord[index + 1]
-                    segment_geom = QgsGeometry.fromPolylineXY([first_point, next_point])
+                    segment_geom = QgsGeometry.fromPolylineXY(
+                        [first_point, next_point]
+                    )
                     point_feats = interpolate_line_segment(
                         segment_geom, interpolate_interval
                     )
@@ -180,7 +197,7 @@ def line_to_point_layer(
     # list_feat = [feat for feat in line_layer.getFeatures()]
     list_geom = [feat.geometry() for feat in list_feat]
     # create point geometry
-    list_point_feat = []
+    # list_point_feat = []
     point_id = 0
     for geom in list_geom:
         if geom.isMultipart():
@@ -212,7 +229,10 @@ def combine_geometries(list_of_geometry):
         list_result_geometry = [
             QgsGeometry().fromPolylineXY(geom) for geom in g.asMultiPolyline()
         ]
-        # print('Geometry is multipart. there are ' + str(len(list_result_geometry)) + ' features')
+        # print(
+        # 'Geometry is multipart. there are ' +
+        # str(len(list_result_geometry)) + ' features'
+        # )
     else:
         list_result_geometry = [g]
         # print('Geometry is singlepart')
@@ -220,7 +240,11 @@ def combine_geometries(list_of_geometry):
 
 
 def line_feature_list_to_layer(
-    list_feat, crs, layer_name="Line Layer", id_name="line_id", filepath="memory"
+    list_feat,
+    crs,
+    layer_name="Line Layer",
+    id_name="line_id",
+    filepath="memory"
 ):
 
     line_layer = QgsVectorLayer("Linestring?crs=" + crs, layer_name, filepath)
@@ -235,7 +259,11 @@ def line_feature_list_to_layer(
 
 def merge_point_layers(point_layer_a, point_layer_b):
     crs = point_layer_a.crs().authid()
-    point_layer = QgsVectorLayer("Point?crs=" + crs, "merge point_layer", "memory")
+    point_layer = QgsVectorLayer(
+        "Point?crs=" + crs,
+        "merge point_layer",
+        "memory"
+    )
     point_layer_pr = point_layer.dataProvider()
     point_layer_pr.addAttributes(point_layer_a.fields())
     point_layer.updateFields()
@@ -258,12 +286,15 @@ def create_voronoi(merged_pt_layer):
     voronoi_diagram = geom_multipoint.voronoiDiagram()
     # create voronoi layer in memory
     vd_layer = QgsVectorLayer(
-        "MultiPolygon?crs=" + merged_pt_layer.crs().authid(), "Voronoi", "memory"
+        "MultiPolygon?crs=" + merged_pt_layer.crs().authid(),
+        "Voronoi",
+        "memory"
     )
     vd_layer_pr = vd_layer.dataProvider()
-    vd_layer_pr.addAttributes(
-        [QgsField("voroID", QVariant.Int), QgsField("point_id", QVariant.String)]
-    )
+    vd_layer_pr.addAttributes([
+        QgsField("voroID", QVariant.Int),
+        QgsField("point_id", QVariant.String)
+    ])
     vd_layer.updateFields()
     vd_id = 0
     for geom in voronoi_diagram.asGeometryCollection():
@@ -354,11 +385,11 @@ def create_delaunay_triangulation(merged_pt_layer):
 
 def valid_delaunay_triangulation(dt_layer, list_feature_a, list_feature_b):
     # Valid Delaunay
-    valid_delaunay_request = QgsFeatureRequest(
-        QgsExpression(f"\"valid_triangle\" = 'valid'")
+    valid_delaunay_req = QgsFeatureRequest(
+        QgsExpression("\"valid_triangle\" = 'valid'")
     )
     valid_delaunay_list = [
-        feat.geometry() for feat in dt_layer.getFeatures(valid_delaunay_request)
+        feat.geometry() for feat in dt_layer.getFeatures(valid_delaunay_req)
     ]
     # create multipart
     valid_delaunay = valid_delaunay_list[0]
@@ -450,7 +481,11 @@ def create_median_line_opposite(vd_layer, list_feature_a, list_feature_b, crs):
     list_median_line = median_line_combine.asGeometryCollection()
 
     # create layer
-    median_layer = QgsVectorLayer("LineString?crs=" + crs, "Median Line", "memory")
+    median_layer = QgsVectorLayer(
+        "LineString?crs=" + crs,
+        "Median Line",
+        "memory"
+    )
     median_layer_pr = median_layer.dataProvider()
     median_layer_pr.addAttributes([QgsField("name", QVariant.String)])
     median_layer.updateFields()
@@ -470,26 +505,26 @@ def create_median_line_adjacent(vd_layer, list_feature_a, list_feature_b, crs):
     sp_index = QgsSpatialIndex(vd_layer)
 
     # find intersection point
-    list_pt_of_intersection = []
+    intersection_points = []
     # get point of intersection
     for fa in list_feature_a:
         for fb in list_feature_b:
             if fa.geometry().intersects(fb.geometry()):
                 poi = fa.geometry().intersection(fb.geometry())
-                list_pt_of_intersection.append(poi)
-    list_pt_of_intersection = list(set(list_pt_of_intersection))
-    if len(list_pt_of_intersection) == 1:
-        meeting_point = list_pt_of_intersection[0]
+                intersection_points.append(poi)
+    intersection_points = list(set(intersection_points))
+    if len(intersection_points) == 1:
+        meeting_point = intersection_points[0]
     else:
-        wkt_list_pt_of_intersection = [pt.asWkt() for pt in list_pt_of_intersection]
-        unique_list_pt_of_intersection = [
+        wkt_intersection_points = [pt.asWkt() for pt in intersection_points]
+        unique_intersection_points = [
             QgsGeometry().fromWkt(wkt_pt)
-            for wkt_pt in list(set(wkt_list_pt_of_intersection))
+            for wkt_pt in list(set(wkt_intersection_points))
         ]
-        if len(unique_list_pt_of_intersection) == 1:
-            meeting_point = unique_list_pt_of_intersection[0]
+        if len(unique_intersection_points) == 1:
+            meeting_point = unique_intersection_points[0]
         else:
-            print(len(list_pt_of_intersection), list_pt_of_intersection)
+            print(len(intersection_points), intersection_points)
 
     # find intersection voronoi
     intersection_voronoi = []
@@ -500,7 +535,7 @@ def create_median_line_adjacent(vd_layer, list_feature_a, list_feature_b, crs):
         if feat.geometry().intersects(meeting_point):
             intersection_voronoi.append(feat.geometry())
     if len(intersection_voronoi) == 1:
-        voro_polygon = intersection_voronoi[0]
+        voro_polygon = intersection_voronoi[0]  # noqa
 
     # create initial median line
     voronoi_a = []
@@ -555,7 +590,11 @@ def create_median_line_adjacent(vd_layer, list_feature_a, list_feature_b, crs):
         line = line.combine(geom_line)
         list_median_line.append(line)
     # create layer
-    median_layer = QgsVectorLayer("LineString?crs=" + crs, "Median Line", "memory")
+    median_layer = QgsVectorLayer(
+        "LineString?crs=" + crs,
+        "Median Line",
+        "memory"
+    )
     median_layer_pr = median_layer.dataProvider()
     median_layer_pr.addAttributes([QgsField("name", QVariant.String)])
     median_layer.updateFields()
@@ -573,18 +612,24 @@ def create_median_line_adjacent(vd_layer, list_feature_a, list_feature_b, crs):
 
 def create_equidistant_point(median_layer):
     equidistant_pt_layer = QgsVectorLayer(
-        "Point?crs=" + median_layer.crs().authid(), "Equidistant Point", "memory"
+        "Point?crs=" + median_layer.crs().authid(),
+        "Equidistant Point",
+        "memory"
     )
     equidistant_pt_layer_pr = equidistant_pt_layer.dataProvider()
     equidistant_pt_layer_pr.addAttributes([QgsField("id", QVariant.Int)])
     equidistant_pt_layer.updateFields()
     if len(median_layer.selectedFeatures()) > 0:
-        list_geom = [feat.geometry() for feat in median_layer.selectedFeatures()]
+        list_geom = [
+            feat.geometry() for feat in median_layer.selectedFeatures()
+        ]
     else:
-        list_geom = [feat.geometry() for feat in median_layer.getFeatures()]
+        list_geom = [
+            feat.geometry() for feat in median_layer.getFeatures()
+        ]
 
     point_id = 0
-    list_point_feat = []
+    # list_point_feat = []
     for median_line_geom in list_geom:
         for point in median_line_geom.asPolyline():
             point_feat = QgsFeature()
@@ -600,7 +645,9 @@ def create_equidistant_point(median_layer):
 
 def create_construction_line(vd_layer, equidistant_pt_layer, merged_pt_layer):
     cl_layer = QgsVectorLayer(
-        "Linestring?crs=" + vd_layer.crs().authid(), "Construction Line", "memory"
+        "Linestring?crs=" + vd_layer.crs().authid(),
+        "Construction Line",
+        "memory"
     )
     cl_layer_pr = cl_layer.dataProvider()
     cl_layer_pr.addAttributes([QgsField("line_id", QVariant.Int)])
@@ -619,7 +666,9 @@ def create_construction_line(vd_layer, equidistant_pt_layer, merged_pt_layer):
                 pt_feat = [
                     feat
                     for feat in merged_pt_layer.getFeatures(
-                        QgsFeatureRequest(QgsExpression(f"\"point_id\" = '{pid}'"))
+                        QgsFeatureRequest(
+                            QgsExpression(f"\"point_id\" = '{pid}'")
+                        )
                     )
                 ]
                 if len(pt_feat) == 1:
@@ -643,7 +692,15 @@ def create_construction_line(vd_layer, equidistant_pt_layer, merged_pt_layer):
     cl_layer.updateExtents()
     return cl_layer
 
-def generate_final_boundary(list_feature_a, list_feature_b, boundary_distance_m, median_layer, crs, buffer_segment = 25):
+
+def generate_final_boundary(
+        list_feature_a,
+        list_feature_b,
+        boundary_distance_m,
+        median_layer,
+        crs,
+        buffer_segment=25
+):
     # create buffer_a
     geom_a = list_feature_a[0].geometry()
     if len(list_feature_a) >= 1:
@@ -675,8 +732,12 @@ def generate_final_boundary(list_feature_a, list_feature_b, boundary_distance_m,
     final_boundary_b = boundary_b.difference(buffer_a).combine(common_line)
     feat_b = QgsFeature()
     feat_b.setGeometry(final_boundary_b)
-    
-    line_layer = QgsVectorLayer("Linestring?crs=" + crs, 'Boundary Layer', "memory")
+
+    line_layer = QgsVectorLayer(
+        "Linestring?crs=" + crs,
+        'Boundary Layer',
+        "memory"
+    )
     line_layer_pr = line_layer.dataProvider()
 
     line_layer_pr.addFeature(feat_a)
@@ -684,9 +745,3 @@ def generate_final_boundary(list_feature_a, list_feature_b, boundary_distance_m,
     line_layer.startEditing()
     line_layer.commitChanges()
     return line_layer
-    
-    
-
-# def side_buffer_rubberbands(line_rubberband, buffer_distance, buffer_segment, buffer_side):
-#     geom = QgsGeometry()
-#     buffer_geom = geom.singleSidedBuffer(buffer_distance, buffer_segment, buffer_side)

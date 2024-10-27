@@ -24,21 +24,39 @@
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QPushButton, QFileDialog
-from qgis.core import QgsMapLayerProxyModel, QgsMapLayerType, Qgis, QgsProject
+from qgis.core import (
+    QgsMapLayerType, Qgis, QgsProject  # QgsMapLayerProxyModel
+)
 from qgis.core import QgsVectorFileWriter, QgsVectorLayer
-from qgis.gui import QgsRubberBand
+# from qgis.gui import QgsRubberBand
 from osgeo import ogr
 
 # Initialize Qt resources from file resources.py
-from .resources import *
+# from .resources import *
 
 # Import the code for the DockWidget
 from .eq_distant_dockwidget import EqDistantDockWidget
-from .library import *
+from .library import (
+    # interpolate_line_segment,
+    # interpolate_line,
+    line_to_point_layer_new,
+    # line_to_point_layer,
+    # combine_geometries,
+    line_feature_list_to_layer,
+    merge_point_layers,
+    create_voronoi,
+    create_delaunay_triangulation,
+    valid_delaunay_triangulation,
+    create_median_line_opposite,
+    create_median_line_adjacent,
+    create_equidistant_point,
+    create_construction_line,
+    generate_final_boundary
+)
 import os.path
-import logging
+# import logging
 
-from .mymaptool import PointTool
+# from .mymaptool import PointTool
 
 
 class EqDistant:
@@ -264,12 +282,18 @@ class EqDistant:
                 self.dockwidget.mcb_input_b.currentIndexChanged.connect(
                     self.layer_input
                 )
-                self.iface.mapCanvas().layersChanged.connect(self.valid_layer_check)
-                self.dockwidget.folder_path.textChanged.connect(self.folder_validation)
-                self.dockwidget.btn_preprocess.pressed.connect(self.preprocess_input)
+                self.iface.mapCanvas().layersChanged.connect(
+                    self.valid_layer_check
+                )
+                self.dockwidget.folder_path.textChanged.connect(
+                    self.folder_validation
+                )
+                self.dockwidget.btn_preprocess.pressed.connect(
+                    self.preprocess_input
+                )
                 self.dockwidget.btn_process.pressed.connect(self.process)
 
-                self.dockwidget.pushButton.pressed.connect(self.customMapTool)
+                # self.dockwidget.pushButton.pressed.connect(self.customMapTool)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -299,8 +323,12 @@ class EqDistant:
         self.input_layer_a = self.dockwidget.mcb_input_a.currentLayer()
         self.input_layer_b = self.dockwidget.mcb_input_b.currentLayer()
         try:
-            self.input_layer_a.selectionChanged.connect(self.feature_selection_a)
-            self.input_layer_b.selectionChanged.connect(self.feature_selection_b)
+            self.input_layer_a.selectionChanged.connect(
+                self.feature_selection_a
+            )
+            self.input_layer_b.selectionChanged.connect(
+                self.feature_selection_b
+            )
             self.check_layer_input()
         except AttributeError:
             pass
@@ -360,8 +388,12 @@ class EqDistant:
             if layer not in self.list_valid_layers
         ]
 
-        self.dockwidget.mcb_input_a.setExceptedLayerList(self.list_invalid_layers)
-        self.dockwidget.mcb_input_b.setExceptedLayerList(self.list_invalid_layers)
+        self.dockwidget.mcb_input_a.setExceptedLayerList(
+            self.list_invalid_layers
+        )
+        self.dockwidget.mcb_input_b.setExceptedLayerList(
+            self.list_invalid_layers
+        )
         if len(self.list_valid_layers) < 2:
             self.iface.messageBar().pushMessage(
                 "Warning:",
@@ -387,13 +419,17 @@ class EqDistant:
                 feat for feat in self.input_layer_a.selectedFeatures()
             ]
         else:
-            self.list_feature_a = [feat for feat in self.input_layer_a.getFeatures()]
+            self.list_feature_a = [
+                feat for feat in self.input_layer_a.getFeatures()
+            ]
         if self.dockwidget.selected_input_b.isChecked():
             self.list_feature_b = [
                 feat for feat in self.input_layer_b.selectedFeatures()
             ]
         else:
-            self.list_feature_b = [feat for feat in self.input_layer_b.getFeatures()]
+            self.list_feature_b = [
+                feat for feat in self.input_layer_b.getFeatures()
+            ]
         # check input CRS
         crs_a = self.input_layer_a.crs().authid()
         crs_b = self.input_layer_b.crs().authid()
@@ -421,7 +457,9 @@ class EqDistant:
         if self.dockwidget.interpolate_input_a.isChecked():
             unit_a = self.dockwidget.interpolate_unit_a.currentIndex()
             if unit_a == 0:
-                interpolate_interval_a = int(self.dockwidget.interpolate_value_a.text())
+                interpolate_interval_a = int(
+                    self.dockwidget.interpolate_value_a.text()
+                )
             elif unit_a == 1:
                 interpolate_interval_a = (
                     int(self.dockwidget.interpolate_value_a.text()) * 1852
@@ -431,7 +469,9 @@ class EqDistant:
         if self.dockwidget.interpolate_input_b.isChecked():
             unit_b = self.dockwidget.interpolate_unit_b.currentIndex()
             if unit_b == 0:
-                interpolate_interval_b = int(self.dockwidget.interpolate_value_b.text())
+                interpolate_interval_b = int(
+                    self.dockwidget.interpolate_value_b.text()
+                )
             elif unit_b == 1:
                 interpolate_interval_b = (
                     int(self.dockwidget.interpolate_value_b.text()) * 1852
@@ -456,7 +496,10 @@ class EqDistant:
             interpolate_interval=interpolate_interval_b,
         )
         # merge point layer
-        self.merged_pt_layer = merge_point_layers(self.p_layer_a, self.p_layer_b)
+        self.merged_pt_layer = merge_point_layers(
+            self.p_layer_a,
+            self.p_layer_b
+        )
         # create voronoi diagaram and delaunay triangulation layer
         # vd_layer = create_voronoi(merged_pt_layer)
         self.dt_layer = create_delaunay_triangulation(self.merged_pt_layer)
@@ -496,11 +539,17 @@ class EqDistant:
                 try:
                     self.iface.messageBar().popWidget(self.msg_widget)
                     self.iface.messageBar().pushMessage(
-                        "Info:", "Area selection success.", Qgis.Success, duration=3
+                        "Info:",
+                        "Area selection success.",
+                        Qgis.Success,
+                        duration=3
                     )
                 except RuntimeError:
                     self.iface.messageBar().pushMessage(
-                        "Info:", "Area selection success.", Qgis.Success, duration=3
+                        "Info:",
+                        "Area selection success.",
+                        Qgis.Success,
+                        duration=3
                     )
             else:
                 self.dockwidget.btn_process.setEnabled(False)
@@ -556,7 +605,7 @@ class EqDistant:
                     self.list_feature_a,
                     self.list_feature_b,
                     boundary_distance,
-                    median_layer, 
+                    median_layer,
                     self.crs,
                     )
                 list_result_layer.append(final_boundary_layer)
@@ -565,9 +614,15 @@ class EqDistant:
                 root = QgsProject.instance().layerTreeRoot()
                 debug_group = root.addGroup(group_name)
                 # add layer
-                QgsProject.instance().addMapLayer(input_layer_a_preprocessed, False)
+                QgsProject.instance().addMapLayer(
+                    input_layer_a_preprocessed,
+                    False
+                )
                 debug_group.addLayer(input_layer_a_preprocessed)
-                QgsProject.instance().addMapLayer(input_layer_b_preprocessed, False)
+                QgsProject.instance().addMapLayer(
+                    input_layer_b_preprocessed,
+                    False
+                )
                 debug_group.addLayer(input_layer_b_preprocessed)
                 QgsProject.instance().addMapLayer(vd_layer, False)
                 debug_group.addLayer(vd_layer)
@@ -619,14 +674,13 @@ class EqDistant:
             for layer in list_result_layer:
                 QgsProject.instance().addMapLayer(layer, False)
                 result_group.addLayer(layer)
-        
+
         # process cleanup
         self.intermediary_group.setItemVisibilityCheckedRecursive(False)
         self.processing_flag = False
         self.valid_dt.selectionChanged.disconnect()
 
-
-    def customMapTool(self):
-        print("pressed")
-        tool = PointTool(self.iface.mapCanvas())
-        self.iface.mapCanvas().setMapTool(tool)
+    # def customMapTool(self):
+    #     print("pressed")
+    #     tool = PointTool(self.iface.mapCanvas())
+    #     self.iface.mapCanvas().setMapTool(tool)
