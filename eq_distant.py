@@ -270,6 +270,11 @@ class EqDistant:
             if self.dockwidget is None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = EqDistantDockWidget()
+                # add multiple and single layer input
+                self.dockwidget.input_single_group.setVisible(False)
+                self.dockwidget.field_input_single.setLayer(
+                    self.dockwidget.mcb_input_single.currentLayer()
+                )
                 self.valid_layer_check()
                 self.layer_input()
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>525</width>
-    <height>766</height>
+    <width>635</width>
+    <height>1033</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,308 +43,278 @@
            <string>Input</string>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="8" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btn_preprocess">
-               <property name="minimumSize">
-                <size>
-                 <width>75</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>75</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Preprocess input data to get initial overview on the area.</string>
-               </property>
-               <property name="text">
-                <string>Preprocess</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Input Layer A</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QgsMapLayerComboBox" name="mcb_input_a"/>
-             </item>
-            </layout>
-           </item>
-           <item row="5" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Input Layer B</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QgsMapLayerComboBox" name="mcb_input_b"/>
-             </item>
-            </layout>
-           </item>
-           <item row="2" column="0">
-            <layout class="QGridLayout" name="gridLayout_4">
-             <item row="1" column="2">
-              <widget class="QLineEdit" name="interpolate_value_a">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Interval distance. Line segment shorter than this value will be interpolated.</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QCheckBox" name="interpolate_input_a">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="toolTip">
-                <string>Interpolate point at a given interval. Enabled on input layer in Projected CRS.</string>
-               </property>
-               <property name="text">
-                <string>Interpolate point</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_8">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="QComboBox" name="interpolate_unit_a">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>80</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <item>
-                <property name="text">
-                 <string>Meter</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Kilometer</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Nautical Miles</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QCheckBox" name="selected_input_a">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="toolTip">
-                <string>Only use selected features in this layer as input for line creation.</string>
-               </property>
-               <property name="text">
-                <string>Selected features only</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_5">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="6" column="0">
-            <layout class="QGridLayout" name="gridLayout_5">
-             <item row="0" column="4">
-              <widget class="QComboBox" name="interpolate_unit_b">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>80</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <item>
-                <property name="text">
-                 <string>Meter</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Kilometer</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Nautical Miles</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QCheckBox" name="selected_input_b">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="toolTip">
-                <string>Only use selected features in this layer as input for line creation.</string>
-               </property>
-               <property name="text">
-                <string>Selected features only</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QLineEdit" name="interpolate_value_b">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Interval distance. Line segment shorter than this value will be interpolated.</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QCheckBox" name="interpolate_input_b">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="toolTip">
-                <string>Interpolate point at a given interval. Enabled on input layer in Projected CRS.</string>
-               </property>
-               <property name="text">
-                <string>Interpolate point</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_7">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_6">
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <item row="3" column="0">
+            <widget class="QGroupBox" name="input_multi_group">
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <item>
+                 <widget class="QLabel" name="label">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Input Layer A</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QgsMapLayerComboBox" name="mcb_input_a"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="interpolate_value_a">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interval distance. Line segment shorter than this value will be interpolated.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="interpolate_input_a">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interpolate point at a given interval. Enabled on input layer in Projected CRS.</string>
+                  </property>
+                  <property name="text">
+                   <string>Interpolate point</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_8">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QComboBox" name="interpolate_unit_a">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Meter</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Kilometer</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Nautical Miles</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QCheckBox" name="selected_input_a">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Only use selected features in this layer as input for line creation.</string>
+                  </property>
+                  <property name="text">
+                   <string>Selected features only</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_5">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QLabel" name="label_2">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Input Layer B</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QgsMapLayerComboBox" name="mcb_input_b"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="0" column="4">
+                 <widget class="QComboBox" name="interpolate_unit_b">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Meter</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Kilometer</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Nautical Miles</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QCheckBox" name="selected_input_b">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Only use selected features in this layer as input for line creation.</string>
+                  </property>
+                  <property name="text">
+                   <string>Selected features only</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLineEdit" name="interpolate_value_b">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interval distance. Line segment shorter than this value will be interpolated.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QCheckBox" name="interpolate_input_b">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interpolate point at a given interval. Enabled on input layer in Projected CRS.</string>
+                  </property>
+                  <property name="text">
+                   <string>Interpolate point</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_7">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_6">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item row="0" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -373,6 +343,206 @@
               </widget>
              </item>
             </layout>
+           </item>
+           <item row="10" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_preprocess">
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Preprocess input data to get initial overview on the area.</string>
+               </property>
+               <property name="text">
+                <string>Preprocess</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QGroupBox" name="input_single_group">
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <layout class="QHBoxLayout" name="single_input_group">
+                <item>
+                 <widget class="QLabel" name="single_input_label">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Input Layer</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QgsMapLayerComboBox" name="mcb_input_single"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="single_input_option">
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="interpolate_value_single">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interval distance. Line segment shorter than this value will be interpolated.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QCheckBox" name="selected_input_single">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Only use selected features in this layer as input for line creation.</string>
+                  </property>
+                  <property name="text">
+                   <string>Selected features only</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_9">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="interpolate_input_single">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Interpolate point at a given interval. Enabled on input layer in Projected CRS.</string>
+                  </property>
+                  <property name="text">
+                   <string>Interpolate point</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QComboBox" name="interpolate_unit_single">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Meter</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Kilometer</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Nautical Miles</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_12">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" colspan="3">
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
+                  <item>
+                   <widget class="QLabel" name="field_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Area Field</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QgsFieldComboBox" name="field_input_single"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -692,6 +862,19 @@
      </widget>
     </item>
     <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QCheckBox" name="check_debug_mode">
@@ -771,6 +954,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QgsFieldComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsfieldcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>QgsMapLayerComboBox</class>
    <extends>QComboBox</extends>
    <header>qgsmaplayercombobox.h</header>
@@ -807,38 +995,6 @@
     <hint type="destinationlabel">
      <x>513</x>
      <y>328</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>interpolate_input_a</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>interpolate_value_a</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>269</x>
-     <y>96</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>467</x>
-     <y>104</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>interpolate_input_a</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>interpolate_unit_a</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>280</x>
-     <y>91</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>481</x>
-     <y>96</y>
     </hint>
    </hints>
   </connection>
@@ -893,32 +1049,80 @@
   <connection>
    <sender>single_input</sender>
    <signal>toggled(bool)</signal>
-   <receiver>multi_input</receiver>
-   <slot>toggle()</slot>
+   <receiver>input_single_group</receiver>
+   <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>259</x>
      <y>98</y>
     </hint>
     <hint type="destinationlabel">
-     <x>405</x>
-     <y>98</y>
+     <x>317</x>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>multi_input</sender>
    <signal>toggled(bool)</signal>
-   <receiver>single_input</receiver>
-   <slot>toggle()</slot>
+   <receiver>input_multi_group</receiver>
+   <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>405</x>
      <y>98</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>98</y>
+     <x>317</x>
+     <y>446</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interpolate_input_a</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interpolate_unit_a</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>280</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>96</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interpolate_input_a</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interpolate_value_a</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>269</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>104</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mcb_input_single</sender>
+   <signal>layerChanged(QgsMapLayer*)</signal>
+   <receiver>field_input_single</receiver>
+   <slot>setLayer(QgsMapLayer*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>198</y>
     </hint>
    </hints>
   </connection>
