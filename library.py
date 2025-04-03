@@ -2,8 +2,6 @@ from qgis.core import *
 from PyQt4.QtCore import QVariant
 import math
 
-#from eq_distant_dialog import EqDistantDialog
-
 
 class Library:
     def __init__(self, layer_a, layer_b, intv, jarak_klaim=0):
